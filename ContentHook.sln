@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36705.20 d17.14
+VisualStudioVersion = 17.14.36705.20
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{544D13
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "project-Infos", "project-Infos", "{98B60F0C-3D95-4246-B5C5-E0D96DB148BB}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "contenthook.webui", "ContentHook.WebUI\contenthook.webui.esproj", "{7F5FE612-A01B-983E-D2B7-90BC78F97415}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +38,12 @@ Global
 		{DEC7698E-DB0B-4114-B942-39BE8BA8F311}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DEC7698E-DB0B-4114-B942-39BE8BA8F311}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DEC7698E-DB0B-4114-B942-39BE8BA8F311}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F5FE612-A01B-983E-D2B7-90BC78F97415}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F5FE612-A01B-983E-D2B7-90BC78F97415}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F5FE612-A01B-983E-D2B7-90BC78F97415}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{7F5FE612-A01B-983E-D2B7-90BC78F97415}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F5FE612-A01B-983E-D2B7-90BC78F97415}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F5FE612-A01B-983E-D2B7-90BC78F97415}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,6 +52,7 @@ Global
 		{409C0D1E-2CC8-4742-ABAD-C205C25F7AD4} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{7F86A31E-C60D-4F9B-B60D-AA2B5E42B05B} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{DEC7698E-DB0B-4114-B942-39BE8BA8F311} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{7F5FE612-A01B-983E-D2B7-90BC78F97415} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {94DDC2B3-1645-4C0A-B5B5-88D51FABA553}
