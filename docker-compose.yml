@@ -1,1 +1,68 @@
-# Vorbereitung
+version: '3.8'
+services:
+  api:
+    build:
+      dockerfile: ContentHook.API/Dockerfile
+    container_name: contenthook_api
+    restart: unless-stopped
+    ports:
+      - "5000:8080"
+      - "5001:8081"
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=ContentHook;Username=${POSTGRES_USER};Password=contenthook123
+    networks:
+      - contenthook-network
+  db:
+    image: postgres:16-alpine
+    container_name: contenthook_pgdb
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGDATA: /data/postgres
+    volumes:
+      - local_pgdata:/var/lib/postgresql/data
+    networks:
+      - contenthook-network
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: contenthook_pgadmin
+    restart: always
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@contenthook.local
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      - db
+    networks:
+      - contenthook-network
+  webui:
+    build:
+      context: ./contenthook.webui
+      dockerfile: Dockerfile
+    container_name: contenthook_webui
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - api
+    stdin_open: true
+    tty: true
+    networks:
+      - contenthook-network
+volumes:
+  local_pgdata:
+  pgadmin-data:
+networks:
+  contenthook-network:
+    driver: bridge
