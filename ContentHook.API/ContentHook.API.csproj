@@ -9,6 +9,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\Models\**" />
+    <Content Remove="Controllers\Models\**" />
+    <EmbeddedResource Remove="Controllers\Models\**" />
+    <None Remove="Controllers\Models\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.24">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
@@ -16,6 +27,10 @@
   <ItemGroup>
     <ProjectReference Include="..\ContentHook.BL\ContentHook.BL.csproj" />
     <ProjectReference Include="..\ContentHook.DAL\ContentHook.DAL.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\Dtos\" />
   </ItemGroup>
 
 </Project>
