@@ -16,6 +16,11 @@ appsettings.Development.json
 appsettings.Development.template.json
 
 
+#weitere ergänzumgen 
+bin/
+obj/
+.vs/
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
