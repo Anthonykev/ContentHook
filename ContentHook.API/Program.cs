@@ -35,6 +35,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// Redirect root URL to Swagger UI
+app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
+
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
