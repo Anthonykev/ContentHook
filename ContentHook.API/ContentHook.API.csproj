@@ -9,10 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\Models\**" />
-    <Content Remove="Controllers\Models\**" />
-    <EmbeddedResource Remove="Controllers\Models\**" />
-    <None Remove="Controllers\Models\**" />
+    <Compile Remove="Properties\Controllers\Models\**" />
+    <Content Remove="Properties\Controllers\Models\**" />
+    <EmbeddedResource Remove="Properties\Controllers\Models\**" />
+    <None Remove="Properties\Controllers\Models\**" />
   </ItemGroup>
 
   <ItemGroup>

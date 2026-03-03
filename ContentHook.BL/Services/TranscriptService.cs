@@ -18,23 +18,20 @@ namespace ContentHook.BL.Services
             _repo = repo;
         }
 
-        public async Task<Transcript> CreateAsync(string userId, string text, string? language)
+        public async Task<Transcript> CreateAsync(
+            string userId,
+            string text,
+            string? language,
+            string? originalFileName)
         {
-         
-            var transcript = new Transcript(userId, text, language);
-
-            
+            var transcript = new Transcript(userId, text, language, originalFileName);
             return await _repo.AddAsync(transcript);
         }
 
         public async Task<Transcript?> GetByIdAsync(Guid id)
-        {
-            return await _repo.GetByIdAsync(id);
-        }
+            => await _repo.GetByIdAsync(id);
 
         public async Task<List<Transcript>> GetAllAsync()
-        {
-            return await _repo.GetAllAsync();
-        }
+            => await _repo.GetAllAsync();
     }
 }
