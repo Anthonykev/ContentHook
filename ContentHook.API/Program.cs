@@ -1,7 +1,7 @@
 using ContentHook.DAL.ORMapper;
 using Microsoft.EntityFrameworkCore;
 using ContentHook.API.Extensions;
-
+using ContentHook.API.Hubs;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +20,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddApplicationServices();
+builder.Services.AddSignalR();
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -51,5 +53,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<ProgressHub>("/hubs/progress");
 
 app.Run();
