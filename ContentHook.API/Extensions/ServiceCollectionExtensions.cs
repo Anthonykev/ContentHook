@@ -1,6 +1,7 @@
-﻿
-using ContentHook.BL.Interfaces;
+﻿using ContentHook.BL.Interfaces;
+using ContentHook.BL.Queue;
 using ContentHook.BL.Services;
+using ContentHook.BL.Workers;
 using ContentHook.DAL.Interfaces;
 using ContentHook.DAL.Repositories;
 
@@ -12,9 +13,16 @@ namespace ContentHook.API.Extensions
         {
             // DAL
             services.AddScoped<ITranscriptRepository, TranscriptRepository>();
+            services.AddScoped<IJobRepository, JobRepository>();         
 
             // BL
             services.AddScoped<ITranscriptService, TranscriptService>();
+
+            // Queue — Singleton: ein Channel für die gesamte App-Laufzeit
+            services.AddSingleton<IJobQueue, JobChannel>();               
+
+            // Background Worker — wird automatisch gestartet
+            services.AddHostedService<VideoProcessingWorker>();           
 
             return services;
         }

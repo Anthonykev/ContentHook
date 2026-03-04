@@ -16,6 +16,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8080
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      - ASPNETCORE_Kestrel__Limits__MaxRequestBodySize=524288000
     networks:
       - contenthook-network
   db:

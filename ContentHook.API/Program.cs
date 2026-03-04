@@ -3,11 +3,18 @@ using Microsoft.EntityFrameworkCore;
 using ContentHook.API.Extensions;
 
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+// Multipart Body Limit für File-Uploads erhöhen
+builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 524288000; // 500 MB
+});
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));

@@ -10,5 +10,10 @@
   <ItemGroup>
     <ProjectReference Include="..\ContentHook.DAL\ContentHook.DAL.csproj" />
   </ItemGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.3" />
+	</ItemGroup>
 
 </Project>
