@@ -22,6 +22,17 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddApplicationServices();
 builder.Services.AddSignalR();
 
+// CORS für React Frontend
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("ReactPolicy", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -50,6 +61,8 @@ app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
 
 app.UseHttpsRedirection();
 
+app.UseRouting();
+app.UseCors("ReactPolicy");   
 app.UseAuthorization();
 
 app.MapControllers();

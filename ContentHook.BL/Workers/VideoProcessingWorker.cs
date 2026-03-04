@@ -17,15 +17,18 @@ namespace ContentHook.BL.Workers
         private readonly IJobQueue _jobQueue;
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly ILogger<VideoProcessingWorker> _logger;
+        private readonly IProgressNotifier _notifier;
 
         public VideoProcessingWorker(
             IJobQueue jobQueue,
             IServiceScopeFactory scopeFactory,
-            ILogger<VideoProcessingWorker> logger)
+            ILogger<VideoProcessingWorker> logger,
+            IProgressNotifier notifier)
         {
             _jobQueue = jobQueue;
             _scopeFactory = scopeFactory;
             _logger = logger;
+            _notifier = notifier;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -36,7 +39,6 @@ namespace ContentHook.BL.Workers
             {
                 await ProcessJobAsync(jobId, stoppingToken);
             }
-
             _logger.LogInformation("VideoProcessingWorker stopped.");
         }
 
@@ -57,40 +59,49 @@ namespace ContentHook.BL.Workers
                     return;
                 }
 
+                // Transcribing 
                 job.MarkAsTranscribing();
                 await jobRepo.UpdateAsync(job);
+                await _notifier.NotifyAsync(jobId, "transcribing");
                 _logger.LogInformation("Job {JobId} → Transcribing", jobId);
 
-                // TODO: echter Whisper-Call kommt dann hier
-                await Task.Delay(2000, cancellationToken); // simuliert Whisper-Dauer
+                await Task.Delay(2000, cancellationToken);
 
-
-                var fakeTranscriptId = Guid.NewGuid(); // TODO : echter Transcript noch einbauen
+                // Generate 
+                var fakeTranscriptId = Guid.NewGuid();
                 job.MarkAsGenerating(fakeTranscriptId);
                 await jobRepo.UpdateAsync(job);
+                await _notifier.NotifyAsync(jobId, "generating");
                 _logger.LogInformation("Job {JobId} → Generating", jobId);
 
-                // TODO: echter GPT-Call kommt hier
-                await Task.Delay(2000, cancellationToken); // simuliert GPT-Dauer
+                await Task.Delay(2000, cancellationToken);
 
-                
-                var fakeGenerationId = Guid.NewGuid(); // TODO: echte Generation mach ich dann hier
+                // Done
+                var fakeGenerationId = Guid.NewGuid();
                 job.MarkAsDone(fakeGenerationId);
                 await jobRepo.UpdateAsync(job);
+                await _notifier.NotifyAsync(jobId, "done", new
+                {
+                    transcriptId = fakeTranscriptId,
+                    generationId = fakeGenerationId
+                });
                 _logger.LogInformation("Job {JobId} → Done", jobId);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Job {JobId} failed.", jobId);
 
-                using var errorScope = _scopeFactory.CreateScope();
-                var errorJobRepo = errorScope.ServiceProvider.GetRequiredService<IJobRepository>();
+                await _notifier.NotifyAsync(jobId, "failed", new { error = ex.Message });
 
-                var job = await errorJobRepo.GetByIdAsync(jobId);
-                if (job is not null)
+                using var errorScope = _scopeFactory.CreateScope();
+                var errorJobRepo = errorScope.ServiceProvider
+                    .GetRequiredService<IJobRepository>();
+
+                var failedJob = await errorJobRepo.GetByIdAsync(jobId);
+                if (failedJob is not null)
                 {
-                    job.MarkAsFailed(ex.Message);
-                    await errorJobRepo.UpdateAsync(job);
+                    failedJob.MarkAsFailed(ex.Message);
+                    await errorJobRepo.UpdateAsync(failedJob);
                 }
             }
         }
