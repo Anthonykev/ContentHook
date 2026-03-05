@@ -31,17 +31,17 @@ namespace ContentHook.DAL.ORMapper
                 entity.Property(x => x.CreatedAt).IsRequired();
             });
 
-            
             modelBuilder.Entity<Job>(entity =>
             {
                 entity.ToTable("Jobs");
                 entity.HasKey(x => x.Id);
                 entity.Property(x => x.UserId).IsRequired().HasMaxLength(200);
                 entity.Property(x => x.Platform).IsRequired().HasMaxLength(20);
-                entity.Property(x => x.VideoFileName).IsRequired().HasMaxLength(500);
+                entity.Property(x => x.OriginalFileName).IsRequired().HasMaxLength(500);  
+                entity.Property(x => x.VideoStorageKey).IsRequired().HasMaxLength(1000);  
                 entity.Property(x => x.Status)
                       .IsRequired()
-                      .HasConversion<string>()    // Enum wird als String in DB gespeichert
+                      .HasConversion<string>()
                       .HasMaxLength(20);
                 entity.Property(x => x.ErrorMessage).HasColumnType("text");
                 entity.Property(x => x.CreatedAt).IsRequired();

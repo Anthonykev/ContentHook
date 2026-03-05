@@ -18,6 +18,15 @@ namespace ContentHook.API.Extensions
 
             // BL
             services.AddScoped<ITranscriptService, TranscriptService>();
+            services.AddScoped<IFFmpegService, FFmpegService>();                    
+            services.AddScoped<IVideoStorageService, TempFileVideoStorageService>(); 
+
+            // Whisper HttpClient
+            services.AddHttpClient<ITranscriptionService, WhisperTranscriptionService>(client =>
+            {
+                client.Timeout = TimeSpan.FromMinutes(5);
+            });                                                                      
+
 
             // Queue — Singleton: ein Channel für die gesamte App-Laufzeit
             services.AddSingleton<IJobQueue, JobChannel>();

@@ -46,9 +46,12 @@ namespace ContentHook.BL.Workers
         {
             _logger.LogInformation("Processing job {JobId}", jobId);
 
-            // Das muss ich imm Hinterkopf behalten: BackgroundService ist ein Singleton, aber Repository und DbContext sind Scoped.
             using var scope = _scopeFactory.CreateScope();
             var jobRepo = scope.ServiceProvider.GetRequiredService<IJobRepository>();
+            var storage = scope.ServiceProvider.GetRequiredService<IVideoStorageService>();
+            var ffmpeg = scope.ServiceProvider.GetRequiredService<IFFmpegService>();
+            var whisper = scope.ServiceProvider.GetRequiredService<ITranscriptionService>();
+            var transcriptService = scope.ServiceProvider.GetRequiredService<ITranscriptService>();
 
             try
             {
@@ -63,40 +66,56 @@ namespace ContentHook.BL.Workers
                 job.MarkAsTranscribing();
                 await jobRepo.UpdateAsync(job);
                 await _notifier.NotifyAsync(jobId, "transcribing");
-                _logger.LogInformation("Job {JobId} → Transcribing", jobId);
 
-                await Task.Delay(2000, cancellationToken);
+                // await using → Streams werden sauber disposed
+                await using var videoStream = await storage.GetAsync(
+                    job.VideoStorageKey, cancellationToken);
 
-                // Generate 
-                var fakeTranscriptId = Guid.NewGuid();
-                job.MarkAsGenerating(fakeTranscriptId);
+                await using var audioStream = await ffmpeg.ExtractAudioAsync(
+                    videoStream, cancellationToken);
+
+                var transcriptText = await whisper.TranscribeAsync(
+                    audioStream, "de", cancellationToken);
+
+                // Video nach Transkription löschen
+                await storage.DeleteAsync(job.VideoStorageKey);
+
+                // Transcript in DB speichern
+                var transcript = await transcriptService.CreateAsync(
+                    job.UserId,
+                    transcriptText,
+                    language: "de",
+                    originalFileName: job.OriginalFileName);
+
+                _logger.LogInformation("Job {JobId} → Transcribed: {Id}", jobId, transcript.Id);
+
+                // Generating 
+                job.MarkAsGenerating(transcript.Id);
                 await jobRepo.UpdateAsync(job);
                 await _notifier.NotifyAsync(jobId, "generating");
-                _logger.LogInformation("Job {JobId} → Generating", jobId);
 
+                // TODO: echter GPT-Call mit Fortschritts-Updates implementieren
                 await Task.Delay(2000, cancellationToken);
 
-                // Done
+                // Done 
                 var fakeGenerationId = Guid.NewGuid();
                 job.MarkAsDone(fakeGenerationId);
                 await jobRepo.UpdateAsync(job);
                 await _notifier.NotifyAsync(jobId, "done", new
                 {
-                    transcriptId = fakeTranscriptId,
+                    transcriptId = transcript.Id,
                     generationId = fakeGenerationId
                 });
+
                 _logger.LogInformation("Job {JobId} → Done", jobId);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Job {JobId} failed.", jobId);
-
                 await _notifier.NotifyAsync(jobId, "failed", new { error = ex.Message });
 
                 using var errorScope = _scopeFactory.CreateScope();
-                var errorJobRepo = errorScope.ServiceProvider
-                    .GetRequiredService<IJobRepository>();
-
+                var errorJobRepo = errorScope.ServiceProvider.GetRequiredService<IJobRepository>();
                 var failedJob = await errorJobRepo.GetByIdAsync(jobId);
                 if (failedJob is not null)
                 {
