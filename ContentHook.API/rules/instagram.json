@@ -1,0 +1,25 @@
+{
+  "platform": "instagram",
+  "promptVersion": "1.0",
+  "rules": {
+    "title": {
+      "minChars": 30,
+      "maxChars": 60,
+      "tone": "storytelling-orientiert oder informativ",
+      "emojiAllowed": true,
+      "description": "Etwas länger als TikTok. Mehr Kontext erlaubt. Basierend auf: Trunfio & Rossi (2021) - Instagram-Nutzer reagieren auf narrative Titel."
+    },
+    "hook": {
+      "maxWords": 5,
+      "tone": "neugierigkeitsbasiert oder emotional",
+      "emojiAllowed": true,
+      "description": "2-5 Wörter. Wird in den ersten 3 Sekunden eingeblendet. Gleiche Logik wie TikTok — kurz und prägnant."
+    },
+    "hashtags": {
+      "minCount": 5,
+      "maxCount": 10,
+      "structure": "Mehr Nischen-Hashtags als TikTok",
+      "description": "Basierend auf: Gross (2024) - Instagram-Algorithmus gewichtet Nischen-Hashtags stärker als Trend-Tags."
+    }
+  }
+}

@@ -6,13 +6,17 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>9689bbee-6522-4673-8681-39dacf3941f0</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	<EnableDefaultContentItems>false</EnableDefaultContentItems>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="Controllers\Models\**" />
+    <Compile Remove="Controllers\NewFolder\**" />
     <Content Remove="Controllers\Models\**" />
     <EmbeddedResource Remove="Controllers\Models\**" />
+    <EmbeddedResource Remove="Controllers\NewFolder\**" />
     <None Remove="Controllers\Models\**" />
+    <None Remove="Controllers\NewFolder\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,5 +36,9 @@
   <ItemGroup>
     <Folder Include="Models\Dtos\" />
   </ItemGroup>
+
+	<ItemGroup>
+		<Content Include="rules\*.json" CopyToOutputDirectory="Always" />
+	</ItemGroup>
 
 </Project>

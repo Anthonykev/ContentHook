@@ -15,7 +15,8 @@ namespace ContentHook.DAL.ORMapper
             : base(options) { }
 
         public DbSet<Transcript> Transcripts => Set<Transcript>();
-        public DbSet<Job> Jobs => Set<Job>();           
+        public DbSet<Job> Jobs => Set<Job>();
+        public DbSet<Generation> Generations => Set<Generation>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -46,6 +47,21 @@ namespace ContentHook.DAL.ORMapper
                 entity.Property(x => x.ErrorMessage).HasColumnType("text");
                 entity.Property(x => x.CreatedAt).IsRequired();
                 entity.Property(x => x.UpdatedAt).IsRequired();
+            });
+
+            modelBuilder.Entity<Generation>(entity =>
+            {
+                entity.ToTable("Generations");
+                entity.HasKey(x => x.Id);
+                entity.Property(x => x.UserId).IsRequired().HasMaxLength(200);
+                entity.Property(x => x.Platform).IsRequired().HasMaxLength(20);
+                entity.Property(x => x.Title).IsRequired().HasColumnType("text");
+                entity.Property(x => x.Hook).IsRequired().HasColumnType("text");
+                entity.Property(x => x.Hashtags).IsRequired().HasColumnType("text");
+                entity.Property(x => x.ModelUsed).IsRequired().HasMaxLength(50);
+                entity.Property(x => x.PromptVersion).IsRequired().HasMaxLength(20);
+                entity.Property(x => x.RegenerationIndex).IsRequired();
+                entity.Property(x => x.CreatedAt).IsRequired();
             });
         }
     }

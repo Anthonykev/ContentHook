@@ -25,8 +25,18 @@ namespace ContentHook.API.Extensions
             services.AddHttpClient<ITranscriptionService, WhisperTranscriptionService>(client =>
             {
                 client.Timeout = TimeSpan.FromMinutes(5);
-            });                                                                      
+            });
 
+            //GPT Generation
+            services.AddSingleton<IRuleProvider, RuleProvider>();
+            services.AddScoped<IPromptBuilder, PromptBuilder>();
+            services.AddScoped<IGenerationService, GenerationService>();
+            services.AddScoped<IGenerationRepository, GenerationRepository>();
+
+            services.AddHttpClient<IGptService, GptService>(client =>
+            {
+                client.Timeout = TimeSpan.FromMinutes(2);
+            });
 
             // Queue — Singleton: ein Channel für die gesamte App-Laufzeit
             services.AddSingleton<IJobQueue, JobChannel>();

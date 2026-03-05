@@ -1,0 +1,25 @@
+﻿{
+  "platform": "tiktok",
+  "promptVersion": "1.0",
+  "rules": {
+    "title": {
+      "minChars": 20,
+      "maxChars": 40,
+      "tone": "emotional oder neugierigkeitsbasiert",
+      "emojiAllowed": true,
+      "description": "Kurz, direkt, emotional. Weckt sofort Interesse. Basierend auf: Chen (2023) - kürzere, emotionale Titel korrelieren mit höherem Engagement auf TikTok."
+    },
+    "hook": {
+      "maxWords": 5,
+      "tone": "provokativ oder überraschend",
+      "emojiAllowed": true,
+      "description": "2-5 Wörter. Wird in den ersten 3 Sekunden eingeblendet. Ziel: Zuschauer zum Weiterschauen bringen."
+    },
+    "hashtags": {
+      "minCount": 3,
+      "maxCount": 5,
+      "structure": "Mix aus Nischen-Hashtag + Trend-Hashtag",
+      "description": "Basierend auf: Chen et al. (2021) - Hashtag-Mix erhöht Reichweite auf TikTok."
+    }
+  }
+}

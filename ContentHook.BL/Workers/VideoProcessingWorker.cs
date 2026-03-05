@@ -67,7 +67,7 @@ namespace ContentHook.BL.Workers
                 await jobRepo.UpdateAsync(job);
                 await _notifier.NotifyAsync(jobId, "transcribing");
 
-                // await using → Streams werden sauber disposed
+               
                 await using var videoStream = await storage.GetAsync(
                     job.VideoStorageKey, cancellationToken);
 
@@ -94,17 +94,33 @@ namespace ContentHook.BL.Workers
                 await jobRepo.UpdateAsync(job);
                 await _notifier.NotifyAsync(jobId, "generating");
 
-                // TODO: echter GPT-Call mit Fortschritts-Updates implementieren
-                await Task.Delay(2000, cancellationToken);
+                // Transcript-Text aus DB laden
+                var fullTranscript = await transcriptService.GetByIdAsync(transcript.Id);
+                if (fullTranscript is null)
+                    throw new InvalidOperationException(
+                        $"Transcript {transcript.Id} not found after creation.");
+
+                // GPT-Call
+                var generationService = scope.ServiceProvider
+                    .GetRequiredService<IGenerationService>();
+
+                var generation = await generationService.GenerateAsync(
+                    job.UserId,
+                    transcript.Id,
+                    fullTranscript.Text,
+                    job.Platform,
+                    cancellationToken);
 
                 // Done 
-                var fakeGenerationId = Guid.NewGuid();
-                job.MarkAsDone(fakeGenerationId);
+                job.MarkAsDone(generation.Id);
                 await jobRepo.UpdateAsync(job);
                 await _notifier.NotifyAsync(jobId, "done", new
                 {
                     transcriptId = transcript.Id,
-                    generationId = fakeGenerationId
+                    generationId = generation.Id,
+                    title = generation.Title,
+                    hook = generation.Hook,
+                    hashtags = generation.Hashtags
                 });
 
                 _logger.LogInformation("Job {JobId} → Done", jobId);

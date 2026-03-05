@@ -18,6 +18,7 @@ services:
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
       - ASPNETCORE_Kestrel__Limits__MaxRequestBodySize=524288000
       - OpenAI__ApiKey=${OPENAI_API_KEY}
+      - OpenAI__Model=${OPENAI_MODEL}
     networks:
       - contenthook-network
   db:
