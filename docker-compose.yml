@@ -19,6 +19,8 @@ services:
       - ASPNETCORE_Kestrel__Limits__MaxRequestBodySize=524288000
       - OpenAI__ApiKey=${OPENAI_API_KEY}
       - OpenAI__Model=${OPENAI_MODEL}
+      - Auth0__Domain=${AUTH0_DOMAIN}
+      - Auth0__Audience=${AUTH0_AUDIENCE}
     networks:
       - contenthook-network
   db:

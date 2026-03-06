@@ -16,5 +16,7 @@ namespace ContentHook.DAL.Interfaces
         // Zählt wie oft generiert wurde (max 3)
         Task<int> CountByTranscriptAndPlatformAsync(
             Guid transcriptId, string platform);
+        Task<Generation?> GetByIdForUserAsync(Guid id, string userId);
+        Task<List<Generation>> GetByTranscriptIdForUserAsync(Guid transcriptId, string userId);
     }
 }

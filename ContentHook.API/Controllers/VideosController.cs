@@ -1,12 +1,14 @@
 ﻿using ContentHook.BL.Interfaces;
 using ContentHook.DAL.Entities;
 using ContentHook.DAL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using System.Security.Claims;
 namespace ContentHook.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class VideosController : ControllerBase
     {
         private readonly IJobRepository _jobRepository;
@@ -43,15 +45,16 @@ namespace ContentHook.API.Controllers
             if (!allowedTypes.Contains(file.ContentType.ToLowerInvariant()))
                 return BadRequest($"Invalid file type '{file.ContentType}'. Only MP4 and MOV are allowed.");
 
-            // TODO: UserId aus JWT-Claim der Authentifizierung extrahieren
-            const string placeholderUserId = "anonymous";
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrWhiteSpace(userId))
+                return Unauthorized("UserId not found in token.");
 
-            
+
             await using var stream = file.OpenReadStream();
             var storageKey = await _storage.SaveAsync(
                 stream, file.FileName, cancellationToken);
 
-            var job = new Job(placeholderUserId, platform, file.FileName, storageKey);
+            var job = new Job(userId, platform, file.FileName, storageKey);
             await _jobRepository.AddAsync(job);
             await _jobQueue.EnqueueAsync(job.Id, cancellationToken);
 

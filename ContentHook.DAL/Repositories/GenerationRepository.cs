@@ -41,5 +41,16 @@ namespace ContentHook.DAL.Repositories
             => await _context.Generations
                 .CountAsync(g => g.TranscriptId == transcriptId
                               && g.Platform == platform.ToLowerInvariant());
+
+        public async Task<Generation?> GetByIdForUserAsync(Guid id, string userId)
+    => await _context.Generations
+        .FirstOrDefaultAsync(g => g.Id == id && g.UserId == userId);
+
+        public async Task<List<Generation>> GetByTranscriptIdForUserAsync(
+            Guid transcriptId, string userId)
+            => await _context.Generations
+                .Where(g => g.TranscriptId == transcriptId && g.UserId == userId)
+                .OrderBy(g => g.CreatedAt)
+                .ToListAsync();
     }
 }
