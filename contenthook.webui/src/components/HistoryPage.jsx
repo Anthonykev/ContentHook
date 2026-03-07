@@ -7,6 +7,7 @@ export default function HistoryPage() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
     const [deletingId, setDeletingId] = useState(null)
+    const [expandedTranscript, setExpandedTranscript] = useState(null)
 
     useEffect(() => {
         const fetchHistory = async () => {
@@ -45,6 +46,10 @@ export default function HistoryPage() {
         }
     }
 
+    function toggleTranscript(jobId) {
+        setExpandedTranscript(prev => prev === jobId ? null : jobId)
+    }
+
     const getStatusBadge = (status) => {
         const map = {
             Done: 'success',
@@ -65,9 +70,7 @@ export default function HistoryPage() {
         </div>
     )
 
-    if (error) return (
-        <div className="alert alert-danger mt-4">{error}</div>
-    )
+    if (error) return <div className="alert alert-danger mt-4">{error}</div>
 
     if (history.length === 0) return (
         <div className="alert alert-info mt-4">Noch keine Videos verarbeitet.</div>
@@ -79,6 +82,8 @@ export default function HistoryPage() {
             <div className="d-flex flex-column gap-3">
                 {history.map(item => (
                     <div key={item.jobId} className="card shadow-sm">
+
+                        {/* Card Header */}
                         <div className="card-header d-flex justify-content-between align-items-center">
                             <div>
                                 <strong>{item.originalFileName}</strong>
@@ -98,12 +103,32 @@ export default function HistoryPage() {
                                 >
                                     {deletingId === item.jobId
                                         ? <span className="spinner-border spinner-border-sm" />
-                                        : '🗑️'
-                                    }
+                                        : '🗑️'}
                                 </button>
                             </div>
                         </div>
 
+                        {/* Transcript Accordion */}
+                        {item.transcriptText && (
+                            <div className="card-body border-bottom pb-2">
+                                <button
+                                    className="btn btn-sm btn-outline-secondary w-100 d-flex justify-content-between align-items-center"
+                                    onClick={() => toggleTranscript(item.jobId)}
+                                >
+                                    <span>📝 Transkript anzeigen</span>
+                                    <span>{expandedTranscript === item.jobId ? '▲' : '▼'}</span>
+                                </button>
+                                {expandedTranscript === item.jobId && (
+                                    <div className="mt-2 p-3 bg-light rounded border" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                                        <p className="mb-0 small text-muted" style={{ whiteSpace: 'pre-wrap' }}>
+                                            {item.transcriptText}
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Generierungen */}
                         {item.generations.length > 0 && (
                             <div className="card-body">
                                 <h6 className="card-subtitle mb-3 text-muted">
