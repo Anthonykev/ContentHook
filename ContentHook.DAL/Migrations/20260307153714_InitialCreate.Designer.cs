@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ContentHook.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260307001731_AddTranscriptUpdatedAt")]
-    partial class AddTranscriptUpdatedAt
+    [Migration("20260307153714_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,96 @@ namespace ContentHook.DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("ContentHook.DAL.Entities.Evaluation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("EfficiencyComparisonScore")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Experience")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("GenerationSpeedScore")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("HashtagPlatformScore")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("HashtagScore")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("HookScore")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("LayoutScore")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("MainPlatform")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("OverallQualityScore")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OverallSatisfactionScore")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PlatformFitScore")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PlatformInfluenceScore")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PlatformOptimizationScore")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PracticalScore")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PresentationScore")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("RecommendationScore")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ReusabilityScore")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SupportScore")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TimeSavingScore")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TitleScore")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UsabilityScore")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("VideosPerMonth")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Evaluations");
+                });
 
             modelBuilder.Entity("ContentHook.DAL.Entities.Generation", b =>
                 {

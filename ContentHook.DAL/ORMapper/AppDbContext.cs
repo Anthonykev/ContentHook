@@ -17,6 +17,7 @@ namespace ContentHook.DAL.ORMapper
         public DbSet<Transcript> Transcripts => Set<Transcript>();
         public DbSet<Job> Jobs => Set<Job>();
         public DbSet<Generation> Generations => Set<Generation>();
+        public DbSet<Evaluation> Evaluations => Set<Evaluation>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -50,6 +50,8 @@ namespace ContentHook.API.Extensions
             // History (API-Layer — aggregiert Job + Transcript + Generations)
             services.AddScoped<HistoryService>();
 
+            services.AddScoped<IRatingRepository, RatingRepository>();
+
             return services;
         }
     }
