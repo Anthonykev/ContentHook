@@ -19,8 +19,9 @@ namespace ContentHook.DAL.Entities
         
         public string ModelUsed { get; private set; } = string.Empty;
         public string PromptVersion { get; private set; } = string.Empty;
+        public string Tonality { get; private set; } = "Standard";
 
-       
+
         //  Zählt max 3 pro Transcript pro Platform
         public int RegenerationIndex { get; private set; }
 
@@ -37,7 +38,8 @@ namespace ContentHook.DAL.Entities
             string hashtags,
             string modelUsed,
             string promptVersion,
-            int regenerationIndex)
+            int regenerationIndex,
+            string tonality = "Standard")
         {
             if (string.IsNullOrWhiteSpace(userId))
                 throw new ArgumentException("UserId is required.", nameof(userId));
@@ -58,6 +60,7 @@ namespace ContentHook.DAL.Entities
             ModelUsed = modelUsed.Trim();
             PromptVersion = promptVersion.Trim();
             RegenerationIndex = regenerationIndex;
+            Tonality = tonality.Trim();
             CreatedAt = DateTime.UtcNow;
         }
     }

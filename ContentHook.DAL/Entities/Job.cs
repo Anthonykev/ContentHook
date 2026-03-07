@@ -12,8 +12,8 @@ namespace ContentHook.DAL.Entities
         public JobStatus Status { get; private set; }
         public string Platform { get; private set; } = string.Empty;
 
-        public string OriginalFileName { get; private set; } = string.Empty; // was der User hochgeladen hat
-        public string VideoStorageKey { get; private set; } = string.Empty; // wo es gespeichert ist
+        public string OriginalFileName { get; private set; } = string.Empty; 
+        public string VideoStorageKey { get; private set; } = string.Empty; 
 
         public Guid? TranscriptId { get; private set; }
         public Guid? GenerationId { get; private set; }
@@ -57,6 +57,13 @@ namespace ContentHook.DAL.Entities
             UpdatedAt = DateTime.UtcNow;
         }
 
+        public void MarkAsTranscribed(Guid transcriptId)
+        {
+            TranscriptId = transcriptId;
+            Status = JobStatus.Transcribed;
+            UpdatedAt = DateTime.UtcNow;
+        }
+
         public void MarkAsDone(Guid generationId)
         {
             GenerationId = generationId;
@@ -76,6 +83,7 @@ namespace ContentHook.DAL.Entities
     {
         Queued,
         Transcribing,
+        Transcribed,
         Generating,
         Done,
         Failed

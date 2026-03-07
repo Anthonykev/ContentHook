@@ -41,5 +41,12 @@ namespace ContentHook.DAL.Repositories
                 .OrderByDescending(x => x.CreatedAt)
                 .ToListAsync();
         }
+
+        public async Task<Transcript> UpdateAsync(Transcript transcript)
+        {
+            _db.Transcripts.Update(transcript);
+            await _db.SaveChangesAsync();
+            return transcript;
+        }
     }
 }

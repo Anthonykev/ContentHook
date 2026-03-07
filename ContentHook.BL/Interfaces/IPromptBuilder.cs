@@ -10,12 +10,12 @@ namespace ContentHook.BL.Interfaces
 {
     public interface IPromptBuilder
 {
-    
-    // Baut den System-Prompt mit plattformspezifischen Regeln.
-    string BuildSystemPrompt(PlatformRules rules);
 
-    
-    // Baut den User-Prompt mit dem Transkript-Text.
-    string BuildUserPrompt(string transcriptText);
+        // Baut den System-Prompt mit plattformspezifischen Regeln.
+        string BuildSystemPrompt(PlatformRules rules, string tonality = "Auto");
+
+
+        // Baut den User-Prompt mit dem Transkript-Text.
+        string BuildUserPrompt(string transcriptText);
 }
 }

@@ -12,5 +12,8 @@ namespace ContentHook.DAL.Interfaces
         Task<Job> AddAsync(Job job);
         Task<Job?> GetByIdAsync(Guid id);
         Task<Job> UpdateAsync(Job job);
+        Task<List<Job>> GetAllByUserAsync(string userId);
+        Task DeleteAsync(Guid id);
+
     }
 }

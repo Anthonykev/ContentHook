@@ -30,7 +30,7 @@ namespace ContentHook.API.Controllers
 
             return Ok(new GenerationResponseDto(
                  generation.Id, generation.Platform, generation.Title,
-                 generation.Hook, generation.Hashtags, generation.ModelUsed,
+                 generation.Hook, generation.Hashtags, generation.Tonality, generation.ModelUsed,
                  generation.PromptVersion, generation.RegenerationIndex, generation.CreatedAt
 ));
         }
@@ -38,13 +38,13 @@ namespace ContentHook.API.Controllers
         [HttpGet("by-transcript/{transcriptId:guid}")]
         public async Task<IActionResult> GetByTranscript(Guid transcriptId)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;  // ← NEU
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;  
             if (string.IsNullOrWhiteSpace(userId))
                 return Unauthorized();
 
             var generations = await _repo.GetByTranscriptIdForUserAsync(transcriptId, userId);
             return Ok(generations.Select(g => new GenerationResponseDto(
-                g.Id, g.Platform, g.Title, g.Hook, g.Hashtags,
+                g.Id, g.Platform, g.Title, g.Hook, g.Hashtags, g.Tonality,
                 g.ModelUsed, g.PromptVersion, g.RegenerationIndex, g.CreatedAt
             )));
         }

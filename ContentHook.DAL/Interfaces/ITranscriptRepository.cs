@@ -14,5 +14,7 @@ namespace ContentHook.DAL.Interfaces
         Task<Transcript?> GetByIdAsync(Guid id);
 
         Task<List<Transcript>> GetAllAsync();
+
+        Task<Transcript> UpdateAsync(Transcript transcript);
     }
 }

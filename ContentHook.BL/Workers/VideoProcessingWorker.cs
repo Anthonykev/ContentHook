@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using ContentHook.BL.Interfaces;
 using ContentHook.DAL.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,6 +38,7 @@ namespace ContentHook.BL.Workers
             {
                 await ProcessJobAsync(jobId, stoppingToken);
             }
+
             _logger.LogInformation("VideoProcessingWorker stopped.");
         }
 
@@ -62,12 +62,12 @@ namespace ContentHook.BL.Workers
                     return;
                 }
 
-                // Transcribing 
+                // Transkription startet hier
                 job.MarkAsTranscribing();
                 await jobRepo.UpdateAsync(job);
                 await _notifier.NotifyAsync(jobId, "transcribing");
 
-               
+                // Audio extrahieren + Whisper aufrufen
                 await using var videoStream = await storage.GetAsync(
                     job.VideoStorageKey, cancellationToken);
 
@@ -77,10 +77,10 @@ namespace ContentHook.BL.Workers
                 var transcriptText = await whisper.TranscribeAsync(
                     audioStream, "de", cancellationToken);
 
-                // Video nach Transkription löschen
+                // Video nach Transkription löschen — nicht mehr benötigt
                 await storage.DeleteAsync(job.VideoStorageKey);
 
-                // Transcript in DB speichern
+                //  Transcript in DB speichern
                 var transcript = await transcriptService.CreateAsync(
                     job.UserId,
                     transcriptText,
@@ -89,41 +89,18 @@ namespace ContentHook.BL.Workers
 
                 _logger.LogInformation("Job {JobId} → Transcribed: {Id}", jobId, transcript.Id);
 
-                // Generating 
-                job.MarkAsGenerating(transcript.Id);
+               
+                // Worker stoppt hier 
+                job.MarkAsTranscribed(transcript.Id);
                 await jobRepo.UpdateAsync(job);
-                await _notifier.NotifyAsync(jobId, "generating");
-
-                // Transcript-Text aus DB laden
-                var fullTranscript = await transcriptService.GetByIdAsync(transcript.Id);
-                if (fullTranscript is null)
-                    throw new InvalidOperationException(
-                        $"Transcript {transcript.Id} not found after creation.");
-
-                // GPT-Call
-                var generationService = scope.ServiceProvider
-                    .GetRequiredService<IGenerationService>();
-
-                var generation = await generationService.GenerateAsync(
-                    job.UserId,
-                    transcript.Id,
-                    fullTranscript.Text,
-                    job.Platform,
-                    cancellationToken);
-
-                // Done 
-                job.MarkAsDone(generation.Id);
-                await jobRepo.UpdateAsync(job);
-                await _notifier.NotifyAsync(jobId, "done", new
+                await _notifier.NotifyAsync(jobId, "transcribed", new
                 {
                     transcriptId = transcript.Id,
-                    generationId = generation.Id,
-                    title = generation.Title,
-                    hook = generation.Hook,
-                    hashtags = generation.Hashtags
+                    transcriptText = transcriptText
                 });
 
-                _logger.LogInformation("Job {JobId} → Done", jobId);
+                _logger.LogInformation(
+                    "Job {JobId} → waiting for user confirmation before GPT.", jobId);
             }
             catch (Exception ex)
             {

@@ -1,6 +1,8 @@
 ﻿using ContentHook.API.DTOs;
 using ContentHook.BL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 
 namespace ContentHook.API.Controllers
@@ -15,8 +17,8 @@ namespace ContentHook.API.Controllers
         {
             _service = service;
         }
+       
 
-     
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -62,5 +64,32 @@ namespace ContentHook.API.Controllers
             var transcripts = await _service.GetAllAsync();
             return Ok(transcripts);
         }
+
+        [Authorize]
+        [HttpPut("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> UpdateText(Guid id, [FromBody] UpdateTranscriptRequest request)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrWhiteSpace(userId))
+                return Unauthorized();
+
+            try
+            {
+                var transcript = await _service.UpdateTextAsync(id, userId, request.Text);
+                return Ok(new { transcript.Id, transcript.Text, transcript.UpdatedAt });
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Forbid();
+            }
+        }
+
     }
 }

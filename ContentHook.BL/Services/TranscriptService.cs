@@ -33,5 +33,17 @@ namespace ContentHook.BL.Services
 
         public async Task<List<Transcript>> GetAllAsync()
             => await _repo.GetAllAsync();
+
+        public async Task<Transcript> UpdateTextAsync(Guid id, string userId, string newText)
+        {
+            var transcript = await _repo.GetByIdAsync(id);
+            if (transcript is null)
+                throw new KeyNotFoundException($"Transcript {id} not found.");
+            if (transcript.UserId != userId)
+                throw new UnauthorizedAccessException("Access denied.");
+
+            transcript.UpdateText(newText);
+            return await _repo.UpdateAsync(transcript);
+        }
     }
 }

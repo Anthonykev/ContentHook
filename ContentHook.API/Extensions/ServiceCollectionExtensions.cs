@@ -45,7 +45,10 @@ namespace ContentHook.API.Extensions
             services.AddSingleton<IProgressNotifier, SignalRProgressNotifier>();
 
             // Background Worker — wird automatisch gestartet
-            services.AddHostedService<VideoProcessingWorker>();           
+            services.AddHostedService<VideoProcessingWorker>();
+
+            // History (API-Layer — aggregiert Job + Transcript + Generations)
+            services.AddScoped<HistoryService>();
 
             return services;
         }

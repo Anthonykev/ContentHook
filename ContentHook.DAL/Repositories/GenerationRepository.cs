@@ -52,5 +52,14 @@ namespace ContentHook.DAL.Repositories
                 .Where(g => g.TranscriptId == transcriptId && g.UserId == userId)
                 .OrderBy(g => g.CreatedAt)
                 .ToListAsync();
+
+        public async Task DeleteByTranscriptIdAsync(Guid transcriptId)
+        {
+            var gens = await _context.Generations
+                .Where(g => g.TranscriptId == transcriptId)
+                .ToListAsync();
+            _context.Generations.RemoveRange(gens);
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -18,5 +18,6 @@ namespace ContentHook.DAL.Interfaces
             Guid transcriptId, string platform);
         Task<Generation?> GetByIdForUserAsync(Guid id, string userId);
         Task<List<Generation>> GetByTranscriptIdForUserAsync(Guid transcriptId, string userId);
+        Task DeleteByTranscriptIdAsync(Guid transcriptId);
     }
 }

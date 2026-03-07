@@ -40,6 +40,7 @@ namespace ContentHook.BL.Services
             Guid transcriptId,
             string transcriptText,
             string platform,
+            string tonality = "Auto",
             CancellationToken cancellationToken = default)
         {
             //  Max-3 pro Transcript pro Platform 
@@ -54,16 +55,20 @@ namespace ContentHook.BL.Services
 
             // Regeln laden + Prompt bauen
             var rules = _ruleProvider.GetRules(platform);
-            var systemPrompt = _promptBuilder.BuildSystemPrompt(rules);
+            var systemPrompt = _promptBuilder.BuildSystemPrompt(rules, tonality);
             var userPrompt = _promptBuilder.BuildUserPrompt(transcriptText);
 
+
+
             _logger.LogInformation(
-                "Generating for platform {Platform}, prompt version {Version}, attempt {Index}",
-                platform, rules.PromptVersion, existingCount + 1);
+            "Generating for platform {Platform}, prompt version {Version}, attempt {Index}, tonality {Tonality}",
+            platform, rules.PromptVersion, existingCount + 1, tonality);
 
             // GPT aufrufen
             var result = await _gptService.GenerateAsync(
                 systemPrompt, userPrompt, cancellationToken);
+
+
 
             // Generation in DB speichern 
             var generation = new Generation(

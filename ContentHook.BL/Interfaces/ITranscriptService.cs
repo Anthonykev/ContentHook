@@ -12,5 +12,7 @@ namespace ContentHook.BL.Interfaces
         Task<Transcript> CreateAsync(string userId, string text, string? language, string? originalFileName);
         Task<Transcript?> GetByIdAsync(Guid id);
         Task<List<Transcript>> GetAllAsync();
+
+        Task<Transcript> UpdateTextAsync(Guid id, string userId, string newText);
     }
 }

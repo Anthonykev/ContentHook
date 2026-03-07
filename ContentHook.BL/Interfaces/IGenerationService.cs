@@ -15,6 +15,7 @@ namespace ContentHook.BL.Interfaces
             Guid transcriptId,
             string transcriptText,
             string platform,
+            string tonality = "Auto",
             CancellationToken cancellationToken = default);
     }
 }

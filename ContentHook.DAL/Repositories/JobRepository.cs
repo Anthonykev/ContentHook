@@ -39,5 +39,21 @@ namespace ContentHook.DAL.Repositories
             await _db.SaveChangesAsync();
             return job;
         }
+        public async Task<List<Job>> GetAllByUserAsync(string userId)
+    => await _db.Jobs
+        .AsNoTracking()
+        .Where(j => j.UserId == userId)
+        .OrderByDescending(j => j.CreatedAt)
+        .ToListAsync();
+
+        public async Task DeleteAsync(Guid id)
+        {
+            var job = await _db.Jobs.FindAsync(id);
+            if (job is not null)
+            {
+                _db.Jobs.Remove(job);
+                await _db.SaveChangesAsync();
+            }
+        }
     }
 }
