@@ -78,6 +78,13 @@ const EMPTY_SCORES = {
     overallSatisfactionScore: 0, reusabilityScore: 0, recommendationScore: 0
 }
 
+function getSummaryField(s, ...keys) {
+    for (const k of keys) {
+        if (s?.[k] !== undefined && s[k] !== null) return s[k]
+    }
+    return 0
+}
+
 function StarButton({ active, onClick, disabled }) {
     const [hovered, setHovered] = useState(false)
     const isActive = active || hovered
@@ -90,11 +97,11 @@ function StarButton({ active, onClick, disabled }) {
             onMouseLeave={() => setHovered(false)}
             disabled={disabled}
             style={{
-                width: '44px', height: '44px',
-                borderRadius: '10px',
+                width: '46px', height: '46px',
+                borderRadius: '12px',
                 background: isActive ? 'rgba(167,139,250,0.2)' : '#1e1e35',
                 border: `1px solid ${isActive ? '#6366f1' : '#2a2a45'}`,
-                color: isActive ? '#a78bfa' : '#475569',
+                color: isActive ? '#d8ccff' : '#6f85a3',
                 fontSize: '20px', padding: 0,
                 transition: 'all 0.15s',
                 cursor: disabled ? 'default' : 'pointer',
@@ -106,7 +113,7 @@ function StarButton({ active, onClick, disabled }) {
 
 function StarRow({ value, onChange, disabled }) {
     return (
-        <div className="d-flex align-items-center gap-2">
+        <div className="d-flex align-items-center gap-2 flex-wrap">
             {[1, 2, 3, 4, 5].map(s => (
                 <StarButton
                     key={s}
@@ -116,7 +123,7 @@ function StarRow({ value, onChange, disabled }) {
                 />
             ))}
             {value > 0 && (
-                <span style={{ fontSize: '11px', color: '#a78bfa', marginLeft: '2px' }}>
+                <span style={{ fontSize: '13px', color: '#cfc2ff', marginLeft: '4px', fontWeight: '700' }}>
                     {value}/5
                 </span>
             )}
@@ -129,16 +136,14 @@ function ProgressBar({ currentStep }) {
     return (
         <div className="mb-4">
             <div className="d-flex justify-content-between align-items-center mb-2">
-                <span style={{ fontSize: '11px', color: '#475569' }}>
+                <span style={{ fontSize: '12px', color: '#8ea1ba', fontWeight: '600' }}>
                     Schritt {currentStep + 1} von {TOTAL_STEPS}
                 </span>
-                <span style={{ fontSize: '11px', color: '#6366f1' }}>
-                    {progress}%
-                </span>
+                <span style={{ fontSize: '12px', color: '#cfc2ff', fontWeight: '700' }}>{progress}%</span>
             </div>
-            <div style={{ height: '4px', background: '#1e1e35', borderRadius: '2px' }}>
+            <div style={{ height: '6px', background: '#1e1e35', borderRadius: '999px' }}>
                 <div style={{
-                    height: '100%', borderRadius: '2px',
+                    height: '100%', borderRadius: '999px',
                     background: 'linear-gradient(90deg, #6366f1, #a78bfa)',
                     width: `${progress}%`,
                     transition: 'width 0.35s ease'
@@ -149,48 +154,67 @@ function ProgressBar({ currentStep }) {
 }
 
 function SummaryBox({ summary }) {
+    const totalRatings = getSummaryField(summary,
+        'totalRatings', 'count', 'total', 'Count', 'TotalRatings')
     const items = [
-        { label: 'Qualität', value: summary.qualityAverage },
-        { label: 'Plattform', value: summary.platformAverage },
-        { label: 'Usability', value: summary.usabilityAverage },
-        { label: 'Zeiteffizienz', value: summary.timeEfficiencyAverage },
-        { label: 'Gesamt', value: summary.overallAverage },
+        {
+            label: 'Qualität',
+            value: getSummaryField(summary, 'qualityAverage', 'avgQuality', 'avgContentQuality', 'item1')
+        },
+        {
+            label: 'Plattform',
+            value: getSummaryField(summary, 'platformAverage', 'avgPlatform', 'avgPlatformFit', 'item2')
+        },
+        {
+            label: 'Usability',
+            value: getSummaryField(summary, 'usabilityAverage', 'avgUsability', 'item3')
+        },
+        {
+            label: 'Zeiteffizienz',
+            value: getSummaryField(summary, 'timeEfficiencyAverage', 'avgTimeEfficiency', 'avgEfficiency', 'item4')
+        },
+        {
+            label: 'Gesamt',
+            value: getSummaryField(summary, 'overallAverage', 'avgOverall', 'avgOverallSatisfaction', 'item5')
+        },
     ]
+
     return (
         <div style={{
             background: '#0a0a14', border: '1px solid #2a2a45',
-            borderRadius: '12px', padding: '18px', marginBottom: '20px'
+            borderRadius: '16px', padding: '22px', marginBottom: '22px'
         }}>
-            <div className="d-flex justify-content-between align-items-center mb-3">
-                <span style={{ fontSize: '13px', color: '#94a3b8', fontWeight: '600' }}>
+            <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap" style={{ gap: '10px' }}>
+                <span style={{ fontSize: '14px', color: '#c2d0e0', fontWeight: '700' }}>
                     📊 Aktuelle Auswertung
                 </span>
                 <span style={{
-                    fontSize: '11px', color: '#4ade80',
+                    fontSize: '12px', color: '#4ade80', fontWeight: '700',
                     background: 'rgba(74,222,128,0.1)',
                     border: '1px solid rgba(74,222,128,0.2)',
-                    borderRadius: '6px', padding: '2px 10px'
+                    borderRadius: '999px', padding: '4px 12px'
                 }}>
-                    {summary.totalRatings} Bewertung{summary.totalRatings !== 1 ? 'en' : ''}
+                    {totalRatings} Bewertung{totalRatings !== 1 ? 'en' : ''}
                 </span>
             </div>
-            <div className="row g-2 text-center">
+
+            <div className="row g-2 text-center mb-3">
                 {items.map(item => (
                     <div key={item.label} className="col-6 col-sm-4 col-md">
                         <div style={{
                             background: '#13131f', border: '1px solid #1e1e35',
-                            borderRadius: '10px', padding: '12px 8px'
+                            borderRadius: '12px', padding: '14px 10px'
                         }}>
                             <div style={{
-                                fontSize: '22px', fontWeight: '700',
-                                color: item.value > 0 ? '#a78bfa' : '#334155',
-                                lineHeight: 1, marginBottom: '4px'
+                                fontSize: '24px', fontWeight: '800',
+                                color: item.value > 0 ? '#d8ccff' : '#445066',
+                                lineHeight: 1, marginBottom: '6px'
                             }}>
                                 {item.value > 0 ? item.value.toFixed(1) : '–'}
                             </div>
                             <div style={{
-                                fontSize: '10px', color: '#475569',
-                                textTransform: 'uppercase', letterSpacing: '0.5px'
+                                fontSize: '11px', color: '#8ea1ba',
+                                textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: '700'
                             }}>
                                 {item.label}
                             </div>
@@ -198,8 +222,44 @@ function SummaryBox({ summary }) {
                     </div>
                 ))}
             </div>
+
+            {items.map(item => (
+                <div key={item.label} className="mb-2">
+                    <div className="d-flex justify-content-between mb-1">
+                        <span style={{ fontSize: '12px', color: '#b8c7d9', fontWeight: '600' }}>{item.label}</span>
+                        <span style={{ fontSize: '12px', color: '#d8ccff', fontWeight: '700' }}>
+                            {item.value > 0 ? `${item.value.toFixed(1)} / 5` : '–'}
+                        </span>
+                    </div>
+                    <div style={{ height: '6px', background: '#1e1e35', borderRadius: '999px' }}>
+                        <div style={{
+                            height: '100%',
+                            width: `${item.value > 0 ? (item.value / 5) * 100 : 0}%`,
+                            background: 'linear-gradient(90deg, #6366f1, #a78bfa)',
+                            borderRadius: '999px',
+                            transition: 'width 0.6s ease'
+                        }} />
+                    </div>
+                </div>
+            ))}
         </div>
     )
+}
+
+const cardStyle = {
+    background: '#0f0f1a',
+    border: '1px solid #2a2a45',
+    borderRadius: '16px',
+    padding: '22px'
+}
+
+const eyebrowStyle = {
+    fontSize: '12px',
+    color: '#b8c7d9',
+    textTransform: 'uppercase',
+    letterSpacing: '1px',
+    fontWeight: '800',
+    marginBottom: '6px'
 }
 
 export default function RatingPage() {
@@ -217,6 +277,17 @@ export default function RatingPage() {
     const [error, setError] = useState(null)
     const [summary, setSummary] = useState(null)
 
+    async function fetchSummary(token) {
+        try {
+            const sRes = await fetch(`${apiUrl}/api/ratings/summary`, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            if (sRes.ok) setSummary(await sRes.json())
+        } catch (e) {
+            console.error('Summary fetch failed:', e)
+        }
+    }
+
     useEffect(() => {
         const init = async () => {
             try {
@@ -226,10 +297,7 @@ export default function RatingPage() {
                 })
                 const data = await res.json()
                 if (data.hasRated) {
-                    const sRes = await fetch(`${apiUrl}/api/ratings/summary`, {
-                        headers: { Authorization: `Bearer ${token}` }
-                    })
-                    setSummary(await sRes.json())
+                    await fetchSummary(token)
                     setMode('rated')
                 } else {
                     setMode('form')
@@ -255,6 +323,7 @@ export default function RatingPage() {
             setScores(EMPTY_SCORES)
             setComment('')
             setCurrentStep(0)
+            setSummary(null)
             setMode('form')
         } catch {
             setError('Fehler beim Zurücksetzen der Bewertung.')
@@ -274,10 +343,7 @@ export default function RatingPage() {
                 body: JSON.stringify({ ...background, ...scores, comment })
             })
             if (!res.ok) throw new Error(await res.text() || `HTTP ${res.status}`)
-            const sRes = await fetch(`${apiUrl}/api/ratings/summary`, {
-                headers: { Authorization: `Bearer ${token}` }
-            })
-            setSummary(await sRes.json())
+            await fetchSummary(token)
             setMode('submitted')
         } catch (err) {
             setError(err.message ?? 'Fehler beim Speichern.')
@@ -287,9 +353,7 @@ export default function RatingPage() {
     }
 
     function isStepValid() {
-        if (currentStep === 0) {
-            return Object.values(background).every(v => v !== '')
-        }
+        if (currentStep === 0) return Object.values(background).every(v => v !== '')
         if (currentStep >= 1 && currentStep <= 5) {
             const step = SCORE_STEPS[currentStep - 1]
             return step.questions.every(q => scores[q.key] > 0)
@@ -312,31 +376,32 @@ export default function RatingPage() {
     }
 
     if (mode === 'loading') return (
-        <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '200px' }}>
+        <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '240px' }}>
             <div className="spinner-border" style={{ color: '#6366f1' }} />
         </div>
     )
 
     return (
-        <div className="container-fluid px-3 px-md-4 py-3">
-            <div className="row justify-content-center">
-                <div className="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+        <div className="container-fluid px-0">
+            <div className="row justify-content-center mx-0">
+                <div className="col-12 col-md-10 col-lg-8 col-xl-7">
 
-                    <h2 style={{ margin: '0 0 4px', fontSize: '20px', fontWeight: '700', color: '#fff' }}>
+                    <h2 style={{ margin: '0 0 6px', fontSize: '30px', fontWeight: '800', color: '#fff' }}>
                         Web-Applikation bewerten
                     </h2>
-                    <p style={{ margin: '0 0 20px', color: '#475569', fontSize: '13px' }}>
+                    <p style={{ margin: '0 0 24px', color: '#b8c7d9', fontSize: '15px', lineHeight: '1.6' }}>
                         Dein Feedback ist Teil der wissenschaftlichen Auswertung dieser Bachelorarbeit.
                     </p>
 
                     {(mode === 'rated' || mode === 'submitted') && (
                         <>
-                            <div className="d-flex justify-content-between align-items-center mb-4" style={{
+                            <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap" style={{
+                                gap: '10px',
                                 background: 'rgba(74,222,128,0.08)',
                                 border: '1px solid rgba(74,222,128,0.2)',
-                                borderRadius: '10px', padding: '12px 16px'
+                                borderRadius: '12px', padding: '14px 16px'
                             }}>
-                                <span style={{ fontSize: '13px', color: '#4ade80', fontWeight: '500' }}>
+                                <span style={{ fontSize: '14px', color: '#4ade80', fontWeight: '700' }}>
                                     {mode === 'submitted'
                                         ? '🎉 Vielen Dank für deine Bewertung!'
                                         : '✅ Du hast bereits eine Bewertung abgegeben.'
@@ -348,8 +413,8 @@ export default function RatingPage() {
                                     disabled={rerating}
                                     style={{
                                         background: '#1e1e35', border: '1px solid #2a2a45',
-                                        color: '#a78bfa', fontSize: '11px',
-                                        borderRadius: '7px', padding: '4px 12px',
+                                        color: '#d8ccff', fontSize: '12px', fontWeight: '700',
+                                        borderRadius: '10px', padding: '6px 12px',
                                         whiteSpace: 'nowrap'
                                     }}
                                 >
@@ -359,7 +424,19 @@ export default function RatingPage() {
                                     }
                                 </button>
                             </div>
-                            {summary && <SummaryBox summary={summary} />}
+
+                            {summary
+                                ? <SummaryBox summary={summary} />
+                                : (
+                                    <div style={{
+                                        background: '#0a0a14', border: '1px solid #2a2a45',
+                                        borderRadius: '16px', padding: '20px',
+                                        color: '#b8c7d9', fontSize: '14px', textAlign: 'center'
+                                    }}>
+                                        ⏳ Auswertung wird geladen…
+                                    </div>
+                                )
+                            }
                         </>
                     )}
 
@@ -368,28 +445,16 @@ export default function RatingPage() {
                             <ProgressBar currentStep={currentStep} />
 
                             {currentStep === 0 && (
-                                <div style={{
-                                    background: '#0f0f1a', border: '1px solid #2a2a45',
-                                    borderRadius: '12px', padding: '20px'
-                                }}>
-                                    <div style={{
-                                        fontSize: '10px', color: '#6366f1',
-                                        textTransform: 'uppercase', letterSpacing: '1px',
-                                        fontWeight: '600', marginBottom: '4px'
-                                    }}>
-                                        Schritt 1 von {TOTAL_STEPS}
-                                    </div>
-                                    <div style={{
-                                        fontSize: '16px', fontWeight: '700',
-                                        color: '#fff', marginBottom: '18px'
-                                    }}>
+                                <div style={cardStyle}>
+                                    <div style={eyebrowStyle}>Schritt 1 von {TOTAL_STEPS}</div>
+                                    <div style={{ fontSize: '20px', fontWeight: '800', color: '#fff', marginBottom: '18px' }}>
                                         👤 Angaben zur Person
                                     </div>
                                     {Object.entries(BACKGROUND_QUESTIONS).map(([key, { label, options }]) => (
                                         <div key={key} className="mb-4">
                                             <div style={{
-                                                fontSize: '13px', color: '#94a3b8',
-                                                marginBottom: '10px', lineHeight: '1.5'
+                                                fontSize: '15px', color: '#d2dcf0',
+                                                marginBottom: '12px', lineHeight: '1.6', fontWeight: '500'
                                             }}>
                                                 {label}
                                             </div>
@@ -401,12 +466,11 @@ export default function RatingPage() {
                                                         className="btn btn-sm"
                                                         onClick={() => setBackground(prev => ({ ...prev, [key]: opt }))}
                                                         style={{
-                                                            background: background[key] === opt
-                                                                ? 'rgba(167,139,250,0.2)' : '#1e1e35',
+                                                            background: background[key] === opt ? 'rgba(167,139,250,0.2)' : '#1e1e35',
                                                             border: `1px solid ${background[key] === opt ? '#6366f1' : '#2a2a45'}`,
-                                                            color: background[key] === opt ? '#a78bfa' : '#64748b',
-                                                            fontSize: '12px', borderRadius: '8px',
-                                                            padding: '6px 14px', transition: 'all 0.15s'
+                                                            color: background[key] === opt ? '#f0e9ff' : '#b8c7d9',
+                                                            fontSize: '13px', fontWeight: '700', borderRadius: '10px',
+                                                            padding: '8px 14px', transition: 'all 0.15s'
                                                         }}
                                                     >
                                                         {opt}
@@ -421,38 +485,23 @@ export default function RatingPage() {
                             {currentStep >= 1 && currentStep <= 5 && (() => {
                                 const cat = SCORE_STEPS[currentStep - 1]
                                 return (
-                                    <div style={{
-                                        background: '#0f0f1a', border: '1px solid #2a2a45',
-                                        borderRadius: '12px', padding: '20px'
-                                    }}>
-                                        <div style={{
-                                            fontSize: '10px', color: '#6366f1',
-                                            textTransform: 'uppercase', letterSpacing: '1px',
-                                            fontWeight: '600', marginBottom: '4px'
-                                        }}>
-                                            Schritt {currentStep + 1} von {TOTAL_STEPS}
-                                        </div>
-                                        <div style={{
-                                            fontSize: '16px', fontWeight: '700',
-                                            color: '#fff', marginBottom: '18px'
-                                        }}>
+                                    <div style={cardStyle}>
+                                        <div style={eyebrowStyle}>Schritt {currentStep + 1} von {TOTAL_STEPS}</div>
+                                        <div style={{ fontSize: '20px', fontWeight: '800', color: '#fff', marginBottom: '6px' }}>
                                             {cat.icon} {cat.title}
                                         </div>
-                                        <div style={{
-                                            fontSize: '11px', color: '#475569',
-                                            marginBottom: '16px'
-                                        }}>
-                                            Skala: 1 = stimme überhaupt nicht zu &nbsp;·&nbsp; 5 = stimme voll zu
+                                        <div style={{ fontSize: '13px', color: '#9fb0c8', marginBottom: '16px' }}>
+                                            Skala: 1 = stimme überhaupt nicht zu · 5 = stimme voll zu
                                         </div>
                                         {cat.questions.map((q, idx) => (
                                             <div key={q.key} style={{
                                                 background: '#0a0a14', border: '1px solid #1e1e35',
-                                                borderRadius: '10px', padding: '14px',
+                                                borderRadius: '12px', padding: '16px',
                                                 marginBottom: idx < cat.questions.length - 1 ? '10px' : 0
                                             }}>
                                                 <div style={{
-                                                    fontSize: '13px', color: '#94a3b8',
-                                                    marginBottom: '12px', lineHeight: '1.5'
+                                                    fontSize: '15px', color: '#d2dcf0',
+                                                    marginBottom: '12px', lineHeight: '1.6'
                                                 }}>
                                                     {q.label}
                                                 </div>
@@ -468,28 +517,14 @@ export default function RatingPage() {
                             })()}
 
                             {currentStep === 6 && (
-                                <div style={{
-                                    background: '#0f0f1a', border: '1px solid #2a2a45',
-                                    borderRadius: '12px', padding: '20px'
-                                }}>
-                                    <div style={{
-                                        fontSize: '10px', color: '#6366f1',
-                                        textTransform: 'uppercase', letterSpacing: '1px',
-                                        fontWeight: '600', marginBottom: '4px'
-                                    }}>
-                                        Schritt 7 von {TOTAL_STEPS} — Letzter Schritt
-                                    </div>
-                                    <div style={{
-                                        fontSize: '16px', fontWeight: '700',
-                                        color: '#fff', marginBottom: '18px'
-                                    }}>
+                                <div style={cardStyle}>
+                                    <div style={eyebrowStyle}>Schritt 7 von {TOTAL_STEPS} — letzter Schritt</div>
+                                    <div style={{ fontSize: '20px', fontWeight: '800', color: '#fff', marginBottom: '18px' }}>
                                         💬 Offene Frage
                                     </div>
-                                    <div style={{
-                                        fontSize: '13px', color: '#94a3b8', marginBottom: '12px'
-                                    }}>
+                                    <div style={{ fontSize: '15px', color: '#d2dcf0', marginBottom: '12px', lineHeight: '1.6' }}>
                                         Was sollte an der Web-Applikation verbessert werden?{' '}
-                                        <span style={{ color: '#334155' }}>(optional)</span>
+                                        <span style={{ color: '#8ea1ba' }}>(optional)</span>
                                     </div>
                                     <textarea
                                         className="form-control"
@@ -500,8 +535,8 @@ export default function RatingPage() {
                                         rows={4}
                                         style={{
                                             background: '#0a0a14', border: '1px solid #2a2a45',
-                                            color: '#e2e8f0', fontSize: '13px',
-                                            borderRadius: '10px', resize: 'vertical'
+                                            color: '#e2e8f0', fontSize: '15px',
+                                            borderRadius: '12px', resize: 'vertical'
                                         }}
                                     />
                                 </div>
@@ -511,14 +546,14 @@ export default function RatingPage() {
                                 <div className="mt-3" style={{
                                     background: 'rgba(239,68,68,0.1)',
                                     border: '1px solid rgba(239,68,68,0.3)',
-                                    borderRadius: '10px', padding: '12px 16px',
-                                    color: '#ef4444', fontSize: '13px'
+                                    borderRadius: '12px', padding: '12px 16px',
+                                    color: '#ef4444', fontSize: '14px'
                                 }}>
                                     {error}
                                 </div>
                             )}
 
-                            <div className="d-flex gap-2 mt-3 mb-4">
+                            <div className="d-flex gap-2 mt-3 mb-4 flex-wrap">
                                 {currentStep > 0 && (
                                     <button
                                         className="btn"
@@ -526,27 +561,25 @@ export default function RatingPage() {
                                         disabled={submitting}
                                         style={{
                                             background: '#1e1e35', border: '1px solid #2a2a45',
-                                            color: '#64748b', fontSize: '13px',
-                                            borderRadius: '10px', padding: '11px 20px',
+                                            color: '#b8c7d9', fontSize: '14px', fontWeight: '700',
+                                            borderRadius: '12px', padding: '12px 20px',
                                             flex: '0 0 auto'
                                         }}
                                     >
                                         ← Zurück
                                     </button>
                                 )}
-
                                 {currentStep < TOTAL_STEPS - 1 ? (
                                     <button
                                         className="btn flex-grow-1"
                                         onClick={handleNext}
                                         style={{
                                             background: isStepValid()
-                                                ? 'linear-gradient(135deg, #6366f1, #a78bfa)'
-                                                : '#1e1e35',
+                                                ? 'linear-gradient(135deg, #6366f1, #a78bfa)' : '#1e1e35',
                                             border: 'none',
-                                            color: isStepValid() ? '#fff' : '#475569',
-                                            fontSize: '14px', fontWeight: '700',
-                                            borderRadius: '10px', padding: '11px',
+                                            color: isStepValid() ? '#fff' : '#7c8da6',
+                                            fontSize: '15px', fontWeight: '800',
+                                            borderRadius: '12px', padding: '12px',
                                             transition: 'all 0.2s'
                                         }}
                                     >
@@ -560,8 +593,9 @@ export default function RatingPage() {
                                         style={{
                                             background: 'linear-gradient(135deg, #6366f1, #a78bfa)',
                                             border: 'none', color: '#fff',
-                                            fontSize: '14px', fontWeight: '700',
-                                            borderRadius: '10px', padding: '11px',
+                                            fontSize: '15px', fontWeight: '800',
+                                            borderRadius: '12px', padding: '12px',
+                                            opacity: submitting ? 0.6 : 1
                                         }}
                                     >
                                         {submitting

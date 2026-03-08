@@ -2,7 +2,7 @@
 {
     public class StartGenerationRequest
     {
-        /// "Auto", "Emotional", "Sachlich", "Neugierig"
         public string Tonality { get; set; } = "Auto";
+        public string? Platform { get; set; }
     }
 }

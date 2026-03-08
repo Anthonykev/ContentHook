@@ -43,7 +43,7 @@ namespace ContentHook.BL.Services
             string tonality = "Auto",
             CancellationToken cancellationToken = default)
         {
-            //  Max-3 pro Transcript pro Platform 
+            // Max-3 pro Transcript pro Platform
             var existingCount = await _generationRepo
                 .CountByTranscriptAndPlatformAsync(transcriptId, platform);
 
@@ -53,24 +53,20 @@ namespace ContentHook.BL.Services
                     $"per transcript per platform reached. " +
                     $"(TranscriptId: {transcriptId}, Platform: {platform})");
 
-            // Regeln laden + Prompt bauen
+            
             var rules = _ruleProvider.GetRules(platform);
             var systemPrompt = _promptBuilder.BuildSystemPrompt(rules, tonality);
             var userPrompt = _promptBuilder.BuildUserPrompt(transcriptText);
 
-
-
             _logger.LogInformation(
-            "Generating for platform {Platform}, prompt version {Version}, attempt {Index}, tonality {Tonality}",
-            platform, rules.PromptVersion, existingCount + 1, tonality);
+                "Generating for platform {Platform}, prompt version {Version}, attempt {Index}, tonality {Tonality}",
+                platform, rules.PromptVersion, existingCount + 1, tonality);
 
-            // GPT aufrufen
+           
             var result = await _gptService.GenerateAsync(
                 systemPrompt, userPrompt, cancellationToken);
 
 
-
-            // Generation in DB speichern 
             var generation = new Generation(
                 userId,
                 transcriptId,
@@ -80,13 +76,14 @@ namespace ContentHook.BL.Services
                 result.Hashtags,
                 result.ModelUsed,
                 rules.PromptVersion,
-                regenerationIndex: existingCount + 1);
+                regenerationIndex: existingCount + 1,
+                tonality: tonality);
 
             await _generationRepo.AddAsync(generation);
 
             _logger.LogInformation(
-                "Generation saved. Id: {Id}, Platform: {Platform}, Index: {Index}",
-                generation.Id, generation.Platform, generation.RegenerationIndex);
+                "Generation saved. Id: {Id}, Platform: {Platform}, Index: {Index}, Tonality: {Tonality}",
+                generation.Id, generation.Platform, generation.RegenerationIndex, generation.Tonality);
 
             return generation;
         }

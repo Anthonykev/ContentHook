@@ -16,22 +16,22 @@ namespace ContentHook.API.Controllers
         private readonly ITranscriptService _transcriptService;
         private readonly IGenerationService _generationService;
         private readonly IProgressNotifier _notifier;
-        private readonly IGenerationRepository _generationRepo;  
+        private readonly IGenerationRepository _generationRepo;
 
         public JobsController(
             IJobRepository jobRepo,
             ITranscriptService transcriptService,
             IGenerationService generationService,
             IProgressNotifier notifier,
-            IGenerationRepository generationRepo)  
+            IGenerationRepository generationRepo)
         {
             _jobRepo = jobRepo;
             _transcriptService = transcriptService;
             _generationService = generationService;
             _notifier = notifier;
-            _generationRepo = generationRepo;  
+            _generationRepo = generationRepo;
         }
-        
+
         [HttpPost("{id:guid}/generate")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -49,8 +49,11 @@ namespace ContentHook.API.Controllers
             if (job is null || job.UserId != userId)
                 return NotFound();
 
-            if (job.Status != ContentHook.DAL.Entities.JobStatus.Transcribed)
-                return BadRequest($"Job is in status '{job.Status}' — expected 'Transcribed'.");
+            if (job.Status != ContentHook.DAL.Entities.JobStatus.Transcribed &&
+                job.Status != ContentHook.DAL.Entities.JobStatus.Done)
+            {
+                return BadRequest($"Job is in status '{job.Status}' — expected 'Transcribed' or 'Done'.");
+            }
 
             if (!job.TranscriptId.HasValue)
                 return BadRequest("Job has no transcript.");
@@ -64,12 +67,17 @@ namespace ContentHook.API.Controllers
             await _notifier.NotifyAsync(id, "generating");
 
             var tonality = string.IsNullOrWhiteSpace(request.Tonality) ? "Auto" : request.Tonality;
+            var platform = string.IsNullOrWhiteSpace(request.Platform) ? job.Platform : request.Platform;
+
+
+            if (string.IsNullOrWhiteSpace(platform))
+                return BadRequest("Platform is required.");
 
             var generation = await _generationService.GenerateAsync(
                 userId,
                 transcript.Id,
                 transcript.Text,
-                job.Platform,
+                platform,
                 tonality,
                 cancellationToken);
 
@@ -104,7 +112,7 @@ namespace ContentHook.API.Controllers
             if (job is null || job.UserId != userId)
                 return NotFound();
 
-            // Generations löschen bevor Job gelöscht wird
+            
             if (job.TranscriptId.HasValue)
                 await _generationRepo.DeleteByTranscriptIdAsync(job.TranscriptId.Value);
 

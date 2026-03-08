@@ -29,7 +29,6 @@ namespace ContentHook.API.Services
                 .Distinct()
                 .ToList();
 
-            // Transcripts batch laden — kein N+1
             var transcripts = new Dictionary<Guid, string>();
             foreach (var tid in transcriptIds)
             {
@@ -38,7 +37,7 @@ namespace ContentHook.API.Services
                     transcripts[tid] = t.Text;
             }
 
-            // Generierungen pro Transcript laden
+          
             var generations = new Dictionary<Guid, List<GenerationResponseDto>>();
             foreach (var tid in transcriptIds)
             {
@@ -71,7 +70,7 @@ namespace ContentHook.API.Services
         {
             var job = await _jobRepo.GetByIdAsync(jobId);
 
-            
+
             if (job is null || job.UserId != userId)
                 return null;
 
