@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
 
 const BACKGROUND_QUESTIONS = {
@@ -97,12 +97,12 @@ function StarButton({ active, onClick, disabled }) {
             onMouseLeave={() => setHovered(false)}
             disabled={disabled}
             style={{
-                width: '46px', height: '46px',
+                width: '52px', height: '52px',
                 borderRadius: '12px',
                 background: isActive ? 'rgba(167,139,250,0.2)' : '#1e1e35',
                 border: `1px solid ${isActive ? '#6366f1' : '#2a2a45'}`,
                 color: isActive ? '#d8ccff' : '#6f85a3',
-                fontSize: '20px', padding: 0,
+                fontSize: '22px', padding: 0,
                 transition: 'all 0.15s',
                 cursor: disabled ? 'default' : 'pointer',
                 flexShrink: 0
@@ -123,7 +123,7 @@ function StarRow({ value, onChange, disabled }) {
                 />
             ))}
             {value > 0 && (
-                <span style={{ fontSize: '13px', color: '#cfc2ff', marginLeft: '4px', fontWeight: '700' }}>
+                <span style={{ fontSize: '15px', color: '#cfc2ff', marginLeft: '4px', fontWeight: '700' }}>
                     {value}/5
                 </span>
             )}
@@ -136,12 +136,12 @@ function ProgressBar({ currentStep }) {
     return (
         <div className="mb-4">
             <div className="d-flex justify-content-between align-items-center mb-2">
-                <span style={{ fontSize: '12px', color: '#8ea1ba', fontWeight: '600' }}>
+                <span style={{ fontSize: '14px', color: '#8ea1ba', fontWeight: '600' }}>
                     Schritt {currentStep + 1} von {TOTAL_STEPS}
                 </span>
-                <span style={{ fontSize: '12px', color: '#cfc2ff', fontWeight: '700' }}>{progress}%</span>
+                <span style={{ fontSize: '14px', color: '#cfc2ff', fontWeight: '700' }}>{progress}%</span>
             </div>
-            <div style={{ height: '6px', background: '#1e1e35', borderRadius: '999px' }}>
+            <div style={{ height: '8px', background: '#1e1e35', borderRadius: '999px' }}>
                 <div style={{
                     height: '100%', borderRadius: '999px',
                     background: 'linear-gradient(90deg, #6366f1, #a78bfa)',
@@ -157,42 +157,27 @@ function SummaryBox({ summary }) {
     const totalRatings = getSummaryField(summary,
         'totalRatings', 'count', 'total', 'Count', 'TotalRatings')
     const items = [
-        {
-            label: 'Qualität',
-            value: getSummaryField(summary, 'qualityAverage', 'avgQuality', 'avgContentQuality', 'item1')
-        },
-        {
-            label: 'Plattform',
-            value: getSummaryField(summary, 'platformAverage', 'avgPlatform', 'avgPlatformFit', 'item2')
-        },
-        {
-            label: 'Usability',
-            value: getSummaryField(summary, 'usabilityAverage', 'avgUsability', 'item3')
-        },
-        {
-            label: 'Zeiteffizienz',
-            value: getSummaryField(summary, 'timeEfficiencyAverage', 'avgTimeEfficiency', 'avgEfficiency', 'item4')
-        },
-        {
-            label: 'Gesamt',
-            value: getSummaryField(summary, 'overallAverage', 'avgOverall', 'avgOverallSatisfaction', 'item5')
-        },
+        { label: 'Qualität', value: getSummaryField(summary, 'qualityAverage', 'avgQuality', 'avgContentQuality', 'item1') },
+        { label: 'Plattform', value: getSummaryField(summary, 'platformAverage', 'avgPlatform', 'avgPlatformFit', 'item2') },
+        { label: 'Usability', value: getSummaryField(summary, 'usabilityAverage', 'avgUsability', 'item3') },
+        { label: 'Zeiteffizienz', value: getSummaryField(summary, 'timeEfficiencyAverage', 'avgTimeEfficiency', 'avgEfficiency', 'item4') },
+        { label: 'Gesamt', value: getSummaryField(summary, 'overallAverage', 'avgOverall', 'avgOverallSatisfaction', 'item5') },
     ]
 
     return (
         <div style={{
             background: '#0a0a14', border: '1px solid #2a2a45',
-            borderRadius: '16px', padding: '22px', marginBottom: '22px'
+            borderRadius: '16px', padding: '24px', marginBottom: '24px'
         }}>
             <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap" style={{ gap: '10px' }}>
-                <span style={{ fontSize: '14px', color: '#c2d0e0', fontWeight: '700' }}>
+                <span style={{ fontSize: '16px', color: '#c2d0e0', fontWeight: '700' }}>
                     📊 Aktuelle Auswertung
                 </span>
                 <span style={{
-                    fontSize: '12px', color: '#4ade80', fontWeight: '700',
+                    fontSize: '13px', color: '#4ade80', fontWeight: '700',
                     background: 'rgba(74,222,128,0.1)',
                     border: '1px solid rgba(74,222,128,0.2)',
-                    borderRadius: '999px', padding: '4px 12px'
+                    borderRadius: '999px', padding: '4px 14px'
                 }}>
                     {totalRatings} Bewertung{totalRatings !== 1 ? 'en' : ''}
                 </span>
@@ -203,17 +188,17 @@ function SummaryBox({ summary }) {
                     <div key={item.label} className="col-6 col-sm-4 col-md">
                         <div style={{
                             background: '#13131f', border: '1px solid #1e1e35',
-                            borderRadius: '12px', padding: '14px 10px'
+                            borderRadius: '12px', padding: '16px 10px'
                         }}>
                             <div style={{
-                                fontSize: '24px', fontWeight: '800',
+                                fontSize: '26px', fontWeight: '800',
                                 color: item.value > 0 ? '#d8ccff' : '#445066',
                                 lineHeight: 1, marginBottom: '6px'
                             }}>
                                 {item.value > 0 ? item.value.toFixed(1) : '–'}
                             </div>
                             <div style={{
-                                fontSize: '11px', color: '#8ea1ba',
+                                fontSize: '12px', color: '#8ea1ba',
                                 textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: '700'
                             }}>
                                 {item.label}
@@ -226,12 +211,12 @@ function SummaryBox({ summary }) {
             {items.map(item => (
                 <div key={item.label} className="mb-2">
                     <div className="d-flex justify-content-between mb-1">
-                        <span style={{ fontSize: '12px', color: '#b8c7d9', fontWeight: '600' }}>{item.label}</span>
-                        <span style={{ fontSize: '12px', color: '#d8ccff', fontWeight: '700' }}>
+                        <span style={{ fontSize: '13px', color: '#b8c7d9', fontWeight: '600' }}>{item.label}</span>
+                        <span style={{ fontSize: '13px', color: '#d8ccff', fontWeight: '700' }}>
                             {item.value > 0 ? `${item.value.toFixed(1)} / 5` : '–'}
                         </span>
                     </div>
-                    <div style={{ height: '6px', background: '#1e1e35', borderRadius: '999px' }}>
+                    <div style={{ height: '7px', background: '#1e1e35', borderRadius: '999px' }}>
                         <div style={{
                             height: '100%',
                             width: `${item.value > 0 ? (item.value / 5) * 100 : 0}%`,
@@ -250,25 +235,26 @@ const cardStyle = {
     background: '#0f0f1a',
     border: '1px solid #2a2a45',
     borderRadius: '16px',
-    padding: '22px'
+    padding: '28px'
 }
 
 const eyebrowStyle = {
-    fontSize: '12px',
+    fontSize: '13px',
     color: '#b8c7d9',
     textTransform: 'uppercase',
     letterSpacing: '1px',
     fontWeight: '800',
-    marginBottom: '6px'
+    marginBottom: '8px'
 }
 
-export default function RatingPage() {
+export default function RatingPage({ onShowDatenschutz }) {
     const { getAccessTokenSilently } = useAuth0()
     const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:5050'
 
     const [background, setBackground] = useState({ videosPerMonth: '', mainPlatform: '', experience: '' })
     const [scores, setScores] = useState(EMPTY_SCORES)
     const [comment, setComment] = useState('')
+    const [dsgvoAccepted, setDsgvoAccepted] = useState(false)
     const [currentStep, setCurrentStep] = useState(0)
 
     const [mode, setMode] = useState('loading')
@@ -308,11 +294,13 @@ export default function RatingPage() {
             }
         }
         init()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [getAccessTokenSilently, apiUrl])
 
     async function handleReRate() {
         setRerating(true)
         setError(null)
+        setDsgvoAccepted(false)
         try {
             const token = await getAccessTokenSilently()
             await fetch(`${apiUrl}/api/ratings/my`, {
@@ -384,12 +372,12 @@ export default function RatingPage() {
     return (
         <div className="container-fluid px-0">
             <div className="row justify-content-center mx-0">
-                <div className="col-12 col-md-10 col-lg-8 col-xl-7">
+                <div className="col-12 col-lg-10 col-xl-9">
 
-                    <h2 style={{ margin: '0 0 6px', fontSize: '30px', fontWeight: '800', color: '#fff' }}>
+                    <h2 style={{ margin: '0 0 8px', fontSize: '32px', fontWeight: '800', color: '#fff' }}>
                         Web-Applikation bewerten
                     </h2>
-                    <p style={{ margin: '0 0 24px', color: '#b8c7d9', fontSize: '15px', lineHeight: '1.6' }}>
+                    <p style={{ margin: '0 0 28px', color: '#b8c7d9', fontSize: '16px', lineHeight: '1.6' }}>
                         Dein Feedback ist Teil der wissenschaftlichen Auswertung dieser Bachelorarbeit.
                     </p>
 
@@ -399,9 +387,9 @@ export default function RatingPage() {
                                 gap: '10px',
                                 background: 'rgba(74,222,128,0.08)',
                                 border: '1px solid rgba(74,222,128,0.2)',
-                                borderRadius: '12px', padding: '14px 16px'
+                                borderRadius: '12px', padding: '16px 20px'
                             }}>
-                                <span style={{ fontSize: '14px', color: '#4ade80', fontWeight: '700' }}>
+                                <span style={{ fontSize: '15px', color: '#4ade80', fontWeight: '700' }}>
                                     {mode === 'submitted'
                                         ? '🎉 Vielen Dank für deine Bewertung!'
                                         : '✅ Du hast bereits eine Bewertung abgegeben.'
@@ -413,8 +401,8 @@ export default function RatingPage() {
                                     disabled={rerating}
                                     style={{
                                         background: '#1e1e35', border: '1px solid #2a2a45',
-                                        color: '#d8ccff', fontSize: '12px', fontWeight: '700',
-                                        borderRadius: '10px', padding: '6px 12px',
+                                        color: '#d8ccff', fontSize: '13px', fontWeight: '700',
+                                        borderRadius: '10px', padding: '8px 16px',
                                         whiteSpace: 'nowrap'
                                     }}
                                 >
@@ -430,8 +418,8 @@ export default function RatingPage() {
                                 : (
                                     <div style={{
                                         background: '#0a0a14', border: '1px solid #2a2a45',
-                                        borderRadius: '16px', padding: '20px',
-                                        color: '#b8c7d9', fontSize: '14px', textAlign: 'center'
+                                        borderRadius: '16px', padding: '24px',
+                                        color: '#b8c7d9', fontSize: '15px', textAlign: 'center'
                                     }}>
                                         ⏳ Auswertung wird geladen…
                                     </div>
@@ -447,14 +435,14 @@ export default function RatingPage() {
                             {currentStep === 0 && (
                                 <div style={cardStyle}>
                                     <div style={eyebrowStyle}>Schritt 1 von {TOTAL_STEPS}</div>
-                                    <div style={{ fontSize: '20px', fontWeight: '800', color: '#fff', marginBottom: '18px' }}>
+                                    <div style={{ fontSize: '22px', fontWeight: '800', color: '#fff', marginBottom: '24px' }}>
                                         👤 Angaben zur Person
                                     </div>
                                     {Object.entries(BACKGROUND_QUESTIONS).map(([key, { label, options }]) => (
-                                        <div key={key} className="mb-4">
+                                        <div key={key} className="mb-5">
                                             <div style={{
-                                                fontSize: '15px', color: '#d2dcf0',
-                                                marginBottom: '12px', lineHeight: '1.6', fontWeight: '500'
+                                                fontSize: '16px', color: '#d2dcf0',
+                                                marginBottom: '14px', lineHeight: '1.6', fontWeight: '500'
                                             }}>
                                                 {label}
                                             </div>
@@ -463,14 +451,14 @@ export default function RatingPage() {
                                                     <button
                                                         key={opt}
                                                         type="button"
-                                                        className="btn btn-sm"
+                                                        className="btn"
                                                         onClick={() => setBackground(prev => ({ ...prev, [key]: opt }))}
                                                         style={{
                                                             background: background[key] === opt ? 'rgba(167,139,250,0.2)' : '#1e1e35',
                                                             border: `1px solid ${background[key] === opt ? '#6366f1' : '#2a2a45'}`,
                                                             color: background[key] === opt ? '#f0e9ff' : '#b8c7d9',
-                                                            fontSize: '13px', fontWeight: '700', borderRadius: '10px',
-                                                            padding: '8px 14px', transition: 'all 0.15s'
+                                                            fontSize: '14px', fontWeight: '700', borderRadius: '10px',
+                                                            padding: '10px 18px', transition: 'all 0.15s'
                                                         }}
                                                     >
                                                         {opt}
@@ -487,21 +475,21 @@ export default function RatingPage() {
                                 return (
                                     <div style={cardStyle}>
                                         <div style={eyebrowStyle}>Schritt {currentStep + 1} von {TOTAL_STEPS}</div>
-                                        <div style={{ fontSize: '20px', fontWeight: '800', color: '#fff', marginBottom: '6px' }}>
+                                        <div style={{ fontSize: '22px', fontWeight: '800', color: '#fff', marginBottom: '8px' }}>
                                             {cat.icon} {cat.title}
                                         </div>
-                                        <div style={{ fontSize: '13px', color: '#9fb0c8', marginBottom: '16px' }}>
+                                        <div style={{ fontSize: '14px', color: '#9fb0c8', marginBottom: '20px' }}>
                                             Skala: 1 = stimme überhaupt nicht zu · 5 = stimme voll zu
                                         </div>
                                         {cat.questions.map((q, idx) => (
                                             <div key={q.key} style={{
                                                 background: '#0a0a14', border: '1px solid #1e1e35',
-                                                borderRadius: '12px', padding: '16px',
-                                                marginBottom: idx < cat.questions.length - 1 ? '10px' : 0
+                                                borderRadius: '12px', padding: '18px',
+                                                marginBottom: idx < cat.questions.length - 1 ? '12px' : 0
                                             }}>
                                                 <div style={{
-                                                    fontSize: '15px', color: '#d2dcf0',
-                                                    marginBottom: '12px', lineHeight: '1.6'
+                                                    fontSize: '16px', color: '#d2dcf0',
+                                                    marginBottom: '14px', lineHeight: '1.6'
                                                 }}>
                                                     {q.label}
                                                 </div>
@@ -519,10 +507,10 @@ export default function RatingPage() {
                             {currentStep === 6 && (
                                 <div style={cardStyle}>
                                     <div style={eyebrowStyle}>Schritt 7 von {TOTAL_STEPS} — letzter Schritt</div>
-                                    <div style={{ fontSize: '20px', fontWeight: '800', color: '#fff', marginBottom: '18px' }}>
+                                    <div style={{ fontSize: '22px', fontWeight: '800', color: '#fff', marginBottom: '20px' }}>
                                         💬 Offene Frage
                                     </div>
-                                    <div style={{ fontSize: '15px', color: '#d2dcf0', marginBottom: '12px', lineHeight: '1.6' }}>
+                                    <div style={{ fontSize: '16px', color: '#d2dcf0', marginBottom: '14px', lineHeight: '1.6' }}>
                                         Was sollte an der Web-Applikation verbessert werden?{' '}
                                         <span style={{ color: '#8ea1ba' }}>(optional)</span>
                                     </div>
@@ -532,13 +520,38 @@ export default function RatingPage() {
                                         value={comment}
                                         onChange={e => setComment(e.target.value)}
                                         maxLength={1000}
-                                        rows={4}
+                                        rows={5}
                                         style={{
                                             background: '#0a0a14', border: '1px solid #2a2a45',
                                             color: '#e2e8f0', fontSize: '15px',
                                             borderRadius: '12px', resize: 'vertical'
                                         }}
                                     />
+                                    <div className="form-check mt-4">
+                                        <input
+                                            className="form-check-input"
+                                            type="checkbox"
+                                            id="dsgvoCheck"
+                                            checked={dsgvoAccepted}
+                                            onChange={e => setDsgvoAccepted(e.target.checked)}
+                                            style={{ cursor: 'pointer', width: '18px', height: '18px' }}
+                                        />
+                                        <label
+                                            className="form-check-label ms-2"
+                                            htmlFor="dsgvoCheck"
+                                            style={{ fontSize: '14px', color: '#9fb0c8', cursor: 'pointer', lineHeight: '1.6' }}
+                                        >
+                                            Ich willige ein, dass meine Bewertungsdaten zur wissenschaftlichen
+                                            Auswertung der Bachelorarbeit verarbeitet werden. (
+                                            <a
+                                                href="#"
+                                                onClick={e => { e.preventDefault(); onShowDatenschutz?.() }}
+                                                style={{ color: '#a78bfa' }}
+                                            >
+                                                Datenschutzerklärung
+                                            </a>)
+                                        </label>
+                                    </div>
                                 </div>
                             )}
 
@@ -546,14 +559,14 @@ export default function RatingPage() {
                                 <div className="mt-3" style={{
                                     background: 'rgba(239,68,68,0.1)',
                                     border: '1px solid rgba(239,68,68,0.3)',
-                                    borderRadius: '12px', padding: '12px 16px',
-                                    color: '#ef4444', fontSize: '14px'
+                                    borderRadius: '12px', padding: '14px 18px',
+                                    color: '#ef4444', fontSize: '15px'
                                 }}>
                                     {error}
                                 </div>
                             )}
 
-                            <div className="d-flex gap-2 mt-3 mb-4 flex-wrap">
+                            <div className="d-flex gap-2 mt-4 mb-4 flex-wrap">
                                 {currentStep > 0 && (
                                     <button
                                         className="btn"
@@ -561,8 +574,8 @@ export default function RatingPage() {
                                         disabled={submitting}
                                         style={{
                                             background: '#1e1e35', border: '1px solid #2a2a45',
-                                            color: '#b8c7d9', fontSize: '14px', fontWeight: '700',
-                                            borderRadius: '12px', padding: '12px 20px',
+                                            color: '#b8c7d9', fontSize: '15px', fontWeight: '700',
+                                            borderRadius: '12px', padding: '14px 24px',
                                             flex: '0 0 auto'
                                         }}
                                     >
@@ -578,8 +591,8 @@ export default function RatingPage() {
                                                 ? 'linear-gradient(135deg, #6366f1, #a78bfa)' : '#1e1e35',
                                             border: 'none',
                                             color: isStepValid() ? '#fff' : '#7c8da6',
-                                            fontSize: '15px', fontWeight: '800',
-                                            borderRadius: '12px', padding: '12px',
+                                            fontSize: '16px', fontWeight: '800',
+                                            borderRadius: '12px', padding: '14px',
                                             transition: 'all 0.2s'
                                         }}
                                     >
@@ -589,13 +602,14 @@ export default function RatingPage() {
                                     <button
                                         className="btn flex-grow-1"
                                         onClick={handleSubmit}
-                                        disabled={submitting}
+                                        disabled={submitting || !dsgvoAccepted}
                                         style={{
                                             background: 'linear-gradient(135deg, #6366f1, #a78bfa)',
                                             border: 'none', color: '#fff',
-                                            fontSize: '15px', fontWeight: '800',
-                                            borderRadius: '12px', padding: '12px',
-                                            opacity: submitting ? 0.6 : 1
+                                            fontSize: '16px', fontWeight: '800',
+                                            borderRadius: '12px', padding: '14px',
+                                            opacity: submitting || !dsgvoAccepted ? 0.4 : 1,
+                                            transition: 'opacity 0.2s'
                                         }}
                                     >
                                         {submitting

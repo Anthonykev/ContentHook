@@ -165,6 +165,8 @@ function RegenForm({ tonality, setTonality, error, signalrError, isFailed, onCan
                         WebkitAppearance: 'none',
                         MozAppearance: 'none',
                         cursor: 'pointer',
+                        outline: 'none',        
+                        boxShadow: 'none', 
                     }}
                 >
                     {TONALITY_OPTIONS.map(option => (
@@ -182,8 +184,8 @@ function RegenForm({ tonality, setTonality, error, signalrError, isFailed, onCan
                     style={{
                         position: 'absolute',
                         right: '14px',
-                        top: '50%',
-                        transform: 'translateY(-50%)',
+                        bottom: '50%',
+                        transform: 'translateY(50%)',
                         color: '#a78bfa',
                         fontSize: '12px',
                         pointerEvents: 'none',
@@ -200,7 +202,7 @@ function RegenForm({ tonality, setTonality, error, signalrError, isFailed, onCan
                     marginBottom: '10px',
                 }}
             >
-                Wähle eine Tonalität für die neue Generierung aus.
+                Wähl eine Tonalität für die neue Generierung aus.
             </div>
 
             {(error || signalrError || isFailed) && (
@@ -496,8 +498,30 @@ function PlatformCard({ platform, generations, jobId, onRegenDone, onRegenStarte
                                 </div>
                             </>
                         ) : (
-                            <>
-                                <span style={{ fontSize: '15px', color: '#9fb0c8' }}>Noch nicht generiert</span>
+                                    <> <div style={{ width: '100%', marginBottom: '12px' }}>
+                                        <div style={{ fontSize: '13px', color: '#9fb0c8', marginBottom: '6px', fontWeight: '600' }}>
+                                            Tonalität wählen:
+                                        </div>
+                                        <select
+                                            className="form-select form-select-sm"
+                                            value={tonality}
+                                            onChange={e => setTonality(e.target.value)}
+                                            style={{
+                                                background: '#13131f',
+                                                border: '1px solid #2a2a45',
+                                                color: '#e2e8f0',
+                                                fontSize: '14px',
+                                            }}
+                                        >
+                                            {TONALITY_OPTIONS.map(option => (
+                                                <option key={option.value} value={option.value} style={{ background: '#13131f' }}>
+                                                    {option.label}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                        
                                 <button
                                     className="btn w-100"
                                     onClick={handleGenerate}
@@ -597,6 +621,7 @@ export default function HistoryPage({ selectedJobId, onRefreshHistory }) {
         setError(null)
         setPendingRefresh(null)
         fetchJobDetail(false)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedJobId]) 
 
     useEffect(() => {

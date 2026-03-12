@@ -340,6 +340,9 @@ export default function VideoUpload({ onJobDone }) {
                         <p style={S.helper}>Wähle dein Video per Drag & Drop oder über den Dateidialog aus.</p>
 
                         <DropZone onFile={handleFileSelect} disabled={uploading} />
+                        <p style={{ fontSize: '12px', color: '#64748b', marginTop: '8px' }}>
+                            Bitte laden Sie nur Inhalte hoch, zu deren Verwendung Sie berechtigt sind.
+                        </p>
 
                         {selectedFile && (
                             <div style={{
@@ -353,6 +356,7 @@ export default function VideoUpload({ onJobDone }) {
                                 <span style={{ color: '#8ea1ba' }}>
                                     {(selectedFile.size / 1024 / 1024).toFixed(1)} MB
                                 </span>
+                               
                             </div>
                         )}
 

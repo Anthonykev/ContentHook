@@ -4,10 +4,14 @@ import { AuthGuard } from './components/AuthGuard'
 import VideoUpload from './components/VideoUpload'
 import HistoryPage from './components/HistoryPage'
 import RatingPage from './components/RatingPage'
+import DatenschutzPage from './components/DatenschutzPage'
+import ImpressumPage from './components/ImpressumPage'  
+
 
 const NAV_ITEMS = [
     { key: 'upload', icon: '📤', label: 'Neues Video' },
     { key: 'rating', icon: '⭐', label: 'Bewerten' },
+    { key: 'datenschutz', icon: '🔒', label: 'Datenschutz' },
     { key: 'impressum', icon: 'ℹ️', label: 'Impressum' },
 ]
 
@@ -37,25 +41,6 @@ function DeleteModal({ onConfirm, onCancel }) {
     )
 }
 
-function ImpressumPage() {
-    return (
-        <div className="row justify-content-center">
-            <div className="col-12 col-lg-8 col-xl-6">
-                <div className="page-section-card">
-                    <h2 className="page-title mb-3">Impressum</h2>
-                    <div className="page-copy">
-                        <p className="mb-2 text-white fw-semibold">ContentHook</p>
-                        <p className="mb-0">Bachelorarbeit — FH Technikum Wien</p>
-                        <p className="mb-0">Kodzo-Kevin-Anthony</p>
-                        <p className="mt-3 mb-0 text-secondary-custom">
-                            Diese Anwendung wurde im Rahmen einer wissenschaftlichen Bachelorarbeit entwickelt.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    )
-}
 
 function SidebarContent({
     history,
@@ -346,12 +331,14 @@ function AppInner() {
                             {activeTab === 'history' && (
                                 <HistoryPage
                                     selectedJobId={selectedJobId}
-                                    setSelectedJobId={setSelectedJobId}
+                                    //setSelectedJobId={setSelectedJobId}
                                     onRefreshHistory={fetchHistory}
                                 />
                             )}
-                            {activeTab === 'rating' && <RatingPage />}
+                            {activeTab === 'rating' && <RatingPage onShowDatenschutz={() => setActiveTab('datenschutz')} />}
                             {activeTab === 'impressum' && <ImpressumPage />}
+                            {activeTab === 'datenschutz' && <DatenschutzPage />}
+                           
                         </div>
                     </div>
                 </main>
