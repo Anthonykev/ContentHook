@@ -13,11 +13,13 @@ namespace ContentHook.BL.Services
         public string BuildSystemPrompt(PlatformRules rules, string tonality = "Auto")
         {
             var tonalityInstruction = tonality == "Auto"
-       ? "Wähle selbst die passende Tonalität basierend auf dem Transkript-Inhalt und gib sie im Feld 'tonality' zurück."
-       : $"Verwende ausschließlich die Tonalität '{tonality}' und gib sie im Feld 'tonality' zurück.";
+                ? "Wähle selbst die passende Tonalität basierend auf dem Transkript-Inhalt und gib sie im Feld 'tonality' zurück."
+                : $"Verwende ausschließlich die Tonalität '{tonality}' und gib sie im Feld 'tonality' zurück.";
 
             return "Du bist ein Social-Media-Experte für " + rules.Platform.ToUpper() + ".\n\n" +
                    "Deine Aufgabe ist es, aus einem Video-Transkript folgende Elemente zu generieren:\n\n" +
+                   "TONALITÄT:\n" +
+                   $"- {tonalityInstruction}\n\n" +
                    "TITEL-REGELN:\n" +
                    $"- Länge: {rules.Title.MinChars}–{rules.Title.MaxChars} Zeichen\n" +
                    $"- Tonalität: {rules.Title.Tone}\n" +

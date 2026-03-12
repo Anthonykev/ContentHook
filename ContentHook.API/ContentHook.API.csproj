@@ -12,11 +12,14 @@
   <ItemGroup>
     <Compile Remove="Controllers\Models\**" />
     <Compile Remove="Controllers\NewFolder\**" />
+    <Compile Remove="Models\**" />
     <Content Remove="Controllers\Models\**" />
     <EmbeddedResource Remove="Controllers\Models\**" />
     <EmbeddedResource Remove="Controllers\NewFolder\**" />
+    <EmbeddedResource Remove="Models\**" />
     <None Remove="Controllers\Models\**" />
     <None Remove="Controllers\NewFolder\**" />
+    <None Remove="Models\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,10 +35,6 @@
   <ItemGroup>
     <ProjectReference Include="..\ContentHook.BL\ContentHook.BL.csproj" />
     <ProjectReference Include="..\ContentHook.DAL\ContentHook.DAL.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\Dtos\" />
   </ItemGroup>
 
 	<ItemGroup>
